@@ -35,6 +35,7 @@ trait UserRegistrationTrait {
                 'birthdate' => date('Y-m-d', strtotime($form_data['birthdate'])),
                 'menstruation_status' => $form_data['menstruation_status'] ?? null,
                 'user_role_id' => 2, // 2 = user feminine and default role
+                'is_active' => 1, // since the admin registered the new user, then it is logically active or verified
                 'remarks' => $form_data['remarks'] ?? null,
             ]);
 

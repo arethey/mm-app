@@ -5,7 +5,7 @@
             displayMode: 2,
             layout: 2,
             drag: false,
-            position: 'topRight',
+            position: 'topCenter',
             title: 'Success!',
             message: "{{ Session::get('post-register') }}",
             transitionIn: 'bounceInDown',
@@ -17,7 +17,7 @@
         iziToast.warning({
             close: false,
             displayMode: 2,
-            position: 'topRight',
+            position: 'topCenter',
             drag: false,
             title: 'Oops!',
             message: "{{ Session::get('account-verification-error') }}",
@@ -30,7 +30,7 @@
         iziToast.error({
             close: false,
             displayMode: 2,
-            position: 'topRight',
+            position: 'topCenter',
             drag: false,
             title: 'Oops!',
             message: "{{ Session::get('login-error') }}",
@@ -43,7 +43,7 @@
         iziToast.error({
             close: false,
             displayMode: 2,
-            position: 'topRight',
+            position: 'topCenter',
             drag: false,
             title: 'Oops!',
             message: "{{ Session::get('auth-error') }}",

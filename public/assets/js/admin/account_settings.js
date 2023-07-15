@@ -59,7 +59,7 @@ $(function () {
                             close: false,
                             displayMode: 2,
                             layout: 2,
-                            position: 'topRight',
+                            position: 'topCenter',
                             drag: false,
                             title: 'Success!',
                             message: response.message,
@@ -71,7 +71,7 @@ $(function () {
                         iziToast.error({
                             close: false,
                             displayMode: 2,
-                            position: 'topRight',
+                            position: 'topCenter',
                             drag: false,
                             title: 'Oops!',
                             message: 'Something went wrong, please try again.',

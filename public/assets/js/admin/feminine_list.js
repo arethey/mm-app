@@ -36,12 +36,21 @@ $(function () {
             ],
             "fnInitComplete": function (oSettings, json) {
                 var urlParams = new URLSearchParams(window.location.search);
-                var id = urlParams.get('q');
 
                 if(urlParams.has('q')) {
-                    $(document).find('#notif_' + id).trigger('click');
+                    $(document).find('#notif_' + urlParams.get('q')).trigger('click');
 
                     urlParams.delete('q');
+
+                    var newUrl = window.location.pathname;
+                    if (urlParams.toString() !== '') newUrl += '?' + urlParams.toString();
+                    history.replaceState(null, '', newUrl);
+                }
+
+                if (urlParams.has('p')) {
+                    $(document).find('#period_notif_' + urlParams.get('p')).trigger('click');
+
+                    urlParams.delete('p');
 
                     var newUrl = window.location.pathname;
                     if (urlParams.toString() !== '') newUrl += '?' + urlParams.toString();
@@ -78,13 +87,56 @@ $(function () {
 
         if (last_period_dates.length != 0) {
             $.each(last_period_dates, function (i, value) {
+                var created_at = new Date(value.created_at);
                 var last_period_date = new Date(value.menstruation_date);
                 var month_arr = [
                     "January", "February", "March", "April", "May", "June",
                     "July", "August", "September", "October", "November", "December"
                 ];
+
+                var currentDate = new Date();
+                var dateText = month_arr[last_period_date.getMonth()] + " " + last_period_date.getDate() + ", " + last_period_date.getFullYear();
+                var period_date = $('<p class="text-muted m-0">• ' + dateText + '</p>');
     
-                modal.find('.modal-body #view_last_periods').append('<p class="text-muted m-0">• ' + month_arr[last_period_date.getMonth()] + " " + last_period_date.getDate() + ", " + last_period_date.getFullYear() + '</p>');
+                if (created_at.toDateString() === currentDate.toDateString()) {
+                    var new_label = $('<span class="badge badge-pill badge-success px-2 ml-2">New</span>');
+                    period_date.append(new_label);
+
+                    $.ajax({
+                        url: '../admin/post-seen/period-notification',
+                        type: 'POST',
+                        data: {
+                            "id": value.id,
+                        },
+                        success: function (res) {
+                            if(res.id) {
+                                $(document).find('#period_notification_body_' + res.id).remove();
+                                $('#feminine_table').DataTable().ajax.reload();
+                            }
+                        }
+                    })
+                    .done(function (res) {
+                        if (res.new_notification_count == 0) {
+                            $(document).find('#period_notification_indicator').addClass('hidden')
+                            $(document).find('.period_notification_count').text('No Notifications');
+                            $(document).find('#period_notification_container').append('\
+                                <a href="#" class="dropdown-item">\
+                                    <div div class= "icon" >\
+                                        <i class="fa-solid fa-mug-hot"></i>\
+                                    </div >\
+                                    <div class="content">\
+                                        <p>No notifications have a coffee</p>\
+                                    </div>\
+                                </a >\
+                    ');
+                        }
+                        else {
+                            $(document).find('.period_notification_count').text(res.new_notification_count + ' New Notifications');
+                        }
+                    });
+                }
+
+                modal.find('.modal-body #view_last_periods').append(period_date);
             });
         }
         else {
@@ -122,7 +174,7 @@ $(function () {
                             close: false,
                             displayMode: 2,
                             layout: 2,
-                            position: 'topRight',
+                            position: 'topCenter',
                             drag: false,
                             title: 'Success!',
                             message: response.message,
@@ -134,7 +186,7 @@ $(function () {
                         iziToast.error({
                             close: false,
                             displayMode: 2,
-                            position: 'topRight',
+                            position: 'topCenter',
                             drag: false,
                             title: 'Oops!',
                             message: response.message,
@@ -191,7 +243,7 @@ $(function () {
                             close: false,
                             displayMode: 2,
                             layout: 2,
-                            position: 'topRight',
+                            position: 'topCenter',
                             drag: false,
                             title: 'Success!',
                             message: 'Record has been successfully removed.',
@@ -203,7 +255,7 @@ $(function () {
                         iziToast.error({
                             close: false,
                             displayMode: 2,
-                            position: 'topRight',
+                            position: 'topCenter',
                             drag: false,
                             title: 'Oops!',
                             message: 'Something went wrong, please try again.',

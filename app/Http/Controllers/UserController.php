@@ -46,7 +46,7 @@ class UserController extends Controller {
 
                 $menstruation_period = MenstruationPeriod::firstOrCreate([
                     'user_id' => $request->id,
-                    'menstruation_date' => date('Y-m-d', strtotime($request->menstruation_period))
+                    'menstruation_date' => date('Y-m-d', strtotime($request->menstruation_period)),
                 ], [
                     'remarks' => $request->remarks
                 ]);

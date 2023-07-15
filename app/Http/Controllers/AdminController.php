@@ -22,14 +22,16 @@ class AdminController extends Controller {
         if(!Auth::check()) return redirect()->route('login')->with('error', 'You don\'t have authorization to access admin portal, please try again.');
 
         $new_notification = $this->signupNotification();
+        $new_period_notification = $this->newMenstrualPeriodNotification();
         $count = $this->feminineCount();
 
-        return view('admin/dashboard', compact('count', 'new_notification'));
+        return view('admin/dashboard', compact('count', 'new_notification', 'new_period_notification'));
     }
 
     public function feminineList() {
         $new_notification = $this->signupNotification();
-        return view('admin/feminine/index', compact('new_notification'));
+        $new_period_notification = $this->newMenstrualPeriodNotification();
+        return view('admin/feminine/index', compact('new_notification', 'new_period_notification'));
     }
 
     public function postFeminine(Request $request) {
@@ -68,7 +70,8 @@ class AdminController extends Controller {
     
     public function calendarIndex() {
         $new_notification = $this->signupNotification();
-        return view('admin/calendar/index', compact('new_notification'));
+        $new_period_notification = $this->newMenstrualPeriodNotification();
+        return view('admin/calendar/index', compact('new_notification', 'new_period_notification'));
     }
 
     public function calendarData() {
@@ -112,7 +115,7 @@ class AdminController extends Controller {
             }
 
             $feminine_arr[$feminine_key]['action'] = '
-                <button type="button" class="btn btn-sm btn-secondary"
+                <button type="button" class="btn btn-sm btn-secondary" id="period_notif_'. $feminine['id'] .'"
                     data-full_name="'.$full_name.'"
                     data-email="'.$feminine['email'].'"
                     data-birthdate="'. ($feminine['birthdate'] ? date('F j, Y', strtotime($feminine['birthdate'])) : 'N/A') .'"
@@ -148,7 +151,8 @@ class AdminController extends Controller {
 
     public function accountSettings() {
         $new_notification = $this->signupNotification();
-        return view('admin/account_settings/index', compact('new_notification'));
+        $new_period_notification = $this->newMenstrualPeriodNotification();
+        return view('admin/account_settings/index', compact('new_notification', 'new_period_notification'));
     }
 
     public function accountReset(Request $request) {
@@ -190,5 +194,21 @@ class AdminController extends Controller {
         }
 
         return response()->json(['data'=>$feminine_arr, "recordsFiltered"=>count($feminine_arr), 'recordsTotal'=>count($feminine_arr)]);
+    }
+
+    public function postSeenPeriodNotification(Request $request) {
+        if($request->id) {
+            try {
+                $post_notification_seen = MenstruationPeriod::findOrFail($request->id);
+                $post_notification_seen->is_seen = 1;
+                $post_notification_seen->save();
+
+                // return $post_notification_seen->id;
+                return response()->json(['status' => 'success', 'id' => $post_notification_seen->id, 'new_notification_count' => count($this->newMenstrualPeriodNotification())]);
+            }
+            catch(\ModelNotFoundException $e) {
+                return response()->json(['status' => 'error', 'message' => 'Something went wrong.']);
+            }
+        }
     }
 }

@@ -60,7 +60,7 @@ $(document).on('click', '.delete_menstrual', function (e) {
                         close: false,
                         displayMode: 2,
                         layout: 2,
-                        position: 'topRight',
+                        position: 'topCenter',
                         drag: false,
                         title: 'Success!',
                         message: response.message,
@@ -72,7 +72,7 @@ $(document).on('click', '.delete_menstrual', function (e) {
                     iziToast.error({
                         close: false,
                         displayMode: 2,
-                        position: 'topRight',
+                        position: 'topCenter',
                         drag: false,
                         title: 'Oops!',
                         message: 'Something went wrong, please try again.',

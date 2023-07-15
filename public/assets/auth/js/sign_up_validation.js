@@ -5,7 +5,8 @@ $('#birthdate_datepicker').datepicker({
     format: "mm/dd/yyyy",
     todayHighlight: true,
     autoclose: true,
-    orientation: "bottom"
+    orientation: "bottom",
+    endDate: '+0d',
 });
 
 $('#birthdate_datepicker').datepicker('setDate', today);
@@ -39,7 +40,7 @@ $("#sign_up_form").validate({
         },
         birthdate: {
             required: true,
-            date: true
+            date: true,
         }
     },
     messages: {

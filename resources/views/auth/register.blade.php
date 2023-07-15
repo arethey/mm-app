@@ -10,13 +10,7 @@
     <link rel="stylesheet" href="{{ asset('assets/auth/css/styles.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/template/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/custom_datepicker_style.css') }}" />
-
-    <style>
-        .form-control { border-radius: 2px !important; }
-        .text-danger { color: #ff3366 !important; }
-        .ml-2 { margin-left: 0.5rem !important; }
-        #birthdate-error { margin-right: 1rem !important; }
-    </style>
+    <link rel="stylesheet" href="{{ asset('assets/auth/css/custom_style.css') }}">
 </head>
 <body>
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">

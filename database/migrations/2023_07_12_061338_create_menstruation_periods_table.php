@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->date('menstruation_date')->nullable();
-            $table->integer('menstruation_period_length')->default(0);
             $table->text('remarks')->nullable();
+            $table->boolean('is_seen')->default(false);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');

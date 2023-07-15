@@ -63,7 +63,7 @@ $.validator.setDefaults({
                         close: false,
                         displayMode: 2,
                         layout: 2,
-                        position: 'topRight',
+                        position: 'topCenter',
                         drag: false,
                         title: 'Success!',
                         message: data.message,
@@ -77,7 +77,7 @@ $.validator.setDefaults({
                 iziToast.error({
                     close: false,
                     displayMode: 2,
-                    position: 'topRight',
+                    position: 'topCenter',
                     drag: false,
                     title: 'Oops!',
                     message: 'Something went wrong, please try again.',

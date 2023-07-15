@@ -9,7 +9,8 @@
         .btn-sm i { font-size: 0.775rem !important; }
         #birthdate-error { margin-right: 1rem !important; }
 
-        .datepicker table tr td.disabled, .datepicker table tr td.disabled:hover {
+        .datepicker table tr td.disabled,
+        .datepicker table tr td.disabled:hover {
             cursor: not-allowed !important;
         }
     </style>

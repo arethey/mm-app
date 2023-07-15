@@ -53,6 +53,6 @@ class User extends Authenticatable
     public function last_periods() {
         return $this->hasMany(MenstruationPeriod::class)
             ->orderBy('menstruation_date', 'desc')
-            ->select(['id', 'user_id', 'menstruation_date', 'remarks']);
+            ->select(['id', 'user_id', 'menstruation_date', 'remarks', 'created_at']);
     }
 }
