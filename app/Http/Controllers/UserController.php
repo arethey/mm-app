@@ -19,6 +19,7 @@ class UserController extends Controller {
     public function index() {
 
         $menstruation_period_list = $this->getMenstruationPeriods();
+        $estimated_next_period = null;
         if(count($menstruation_period_list) !== 0) {
             $estimated_next_period = $this->estimatedNextPeriod($menstruation_period_list->first()->menstruation_date, Auth::user()->birthdate);
         }

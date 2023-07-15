@@ -23,7 +23,7 @@ return new class extends Migration
             $table->boolean('menstruation_status')
                 ->default(true) // true = user's menstruation is active and is currently not pregnant
                 ->comment('1 = active and not pregnant, 0 = inactive and might be pregnant');
-            $table->integer('user_role_id')->default(2); // set 2 as default for user only role
+            $table->unsignedBigInteger('user_role_id')->default(2); // set 2 as default for user only role
             $table->boolean('is_active')->default(false); // true = user is active and can login, false = user is inactive and cannot login or need to be verified by admin
             $table->text('remarks')->nullable();
             $table->rememberToken();
