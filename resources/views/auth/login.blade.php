@@ -22,7 +22,7 @@
                         <div class="card mb-0">
                             <div class="card-body">
                                 @if(Route::has('login'))
-                                    <p class="text-center fw-bolder mb-1 h4">Welcome to MCC!</p>
+                                    <p class="text-center fw-bolder mb-1 h4">Menstrual Monitoring App</p>
                                     @auth
                                         @if(Auth::user()->user_role_id == 1)
                                             <p class="text-center mb-4">Leaving already? click below to return to dashboard</p>

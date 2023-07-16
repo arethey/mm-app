@@ -30,7 +30,7 @@
                         @endauth
                         <div class="card mb-0">
                             <div class="card-body">
-                                <p class="text-center fw-bolder mb-1 h4">Welcome to MCC!</p>
+                                <p class="text-center fw-bolder mb-1 h4">Menstrual Monitoring App!</p>
                                 @if(Route::has('register'))
                                     @auth
                                         @if(Auth::user()->user_role_id == 1)
@@ -41,7 +41,7 @@
                                             <a href="{{ URL::to('user/dashboard') }}" class="btn btn-primary w-100 py-2 fs-4 rounded-1">Return to Dashboard</a>
                                         @endif
                                     @else
-                                        <p class="text-center mb-4">MCC Account Registration, Please fill-up the form to create an account.</p>
+                                        <p class="text-center mb-4">Please fill-up the form to create an account.</p>
                                         <form id="sign_up_form" method="POST" action="{{ route('register') }}" autocomplete="off">
                                             @csrf
 
@@ -131,7 +131,7 @@
                                                 <div class="col-12 mt-2 ml-2">
                                                     <small id="menstruation_help" class="form-text text-muted">
                                                         <li><span class="fw-bolder">Active</span> - Your menstruation is active and is not pregnant</li>
-                                                        <li><span class="fw-bolder">Inactive</span> - Your menstruation is not active and might be pregnant</li>
+                                                        <li><span class="fw-bolder">Inactive</span> - Your menstruation is not active and might be pregnant or delayed</li>
                                                     </small>
                                                 </div>
                                             </div>
