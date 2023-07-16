@@ -31,7 +31,8 @@ $(document).on('click', '.edit_menstrual', function (e) {
 
     var button = $(this);
     $(document).find('#menstruation_period_id').val(button.data('id'));
-    $(document).find('#menstruation_period').val(button.data('menstruation_period'));
+    // $(document).find('#menstruation_period').val(button.data('menstruation_period'));
+    $(document).find('#menstruation_period_datepicker').datepicker('setDate', button.data('menstruation_period'));
     $(document).find('#remarks').val(button.data('remarks'));
 });
 

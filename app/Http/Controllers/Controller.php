@@ -25,6 +25,12 @@ class Controller extends BaseController
             ->where('users.user_role_id', 2)
             ->where('users.is_active', 1)
             ->where('menstruation_periods.is_seen', 0)
-            ->get(['menstruation_periods.id', 'menstruation_periods.menstruation_date', 'users.first_name', 'users.last_name', 'users.middle_name']);
+            ->get([
+                'menstruation_periods.id',
+                'users.id as user_id',
+                \DB::raw("DATE_FORMAT(menstruation_periods.menstruation_date, '%b %e, %Y') as formatted_menstruation_date"),
+                'users.first_name',
+                'users.last_name',
+                'users.middle_name']);
     }
 }

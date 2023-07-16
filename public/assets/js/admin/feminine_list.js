@@ -5,7 +5,6 @@ $('#edit_last_period_datepicker').datepicker({
     todayHighlight: true,
     autoclose: true,
     forceParse: false,
-    orientation: "bottom"
 });
 
 $('#edit_birthdate_datepicker').datepicker({
@@ -13,7 +12,7 @@ $('#edit_birthdate_datepicker').datepicker({
     todayHighlight: true,
     autoclose: true,
     forceParse: false,
-    orientation: "bottom"
+    endDate: '+0d',
 });
 
 $(function () {
@@ -78,6 +77,7 @@ $(function () {
         modal.find('.modal-body #view_name').text(button.data('full_name'));
         modal.find('.modal-body #view_email').text(button.data('email'));
         modal.find('.modal-body #view_birthdate').text(button.data('birthdate'));
+        modal.find('.modal-body #view_address').text(button.data('address'));
 
         modal.find('.modal-body #view_is_active')
             .text(button.data('is_active') === 1 ? '• Verified' : '• Pending');
@@ -98,8 +98,8 @@ $(function () {
                 var dateText = month_arr[last_period_date.getMonth()] + " " + last_period_date.getDate() + ", " + last_period_date.getFullYear();
                 var period_date = $('<p class="text-muted m-0">• ' + dateText + '</p>');
     
-                if (created_at.toDateString() === currentDate.toDateString()) {
-                    var new_label = $('<span class="badge badge-pill badge-success px-2 ml-2">New</span>');
+                if (created_at.toDateString() == currentDate.toDateString()) {
+                    var new_label = $('<span class="badge badge-pill badge-success ml-2">New</span>');
                     period_date.append(new_label);
 
                     $.ajax({
@@ -284,6 +284,7 @@ $(function () {
             modal.find('.modal-body #edit_menstruation_period_id').val(button.data('menstruation_period_id'));
             modal.find('.modal-body #edit_first_name').val(button.data('first_name'));
             modal.find('.modal-body #edit_middle_name').val(button.data('middle_name'));
+            modal.find('.modal-body #edit_address').val(button.data('address'));
             modal.find('.modal-body #edit_last_name').val(button.data('last_name'));
             modal.find('.modal-body #edit_email_address').val(button.data('email'));
             modal.find('.modal-body #edit_remarks').val(button.data('remarks'));

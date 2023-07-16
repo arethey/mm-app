@@ -74,6 +74,7 @@ class RegisterController extends Controller
                 'last_name' => $data['last_name'],
                 'middle_name' => $data['middle_name'] ?? null,
                 'email' => $data['email'],
+                'address' => $data['address'] ?? null,
                 'birthdate' => date('Y-m-d', strtotime($data['birthdate'])),
                 'password' => Hash::make($data['password']),
                 'menstruation_status' => $data['menstruation_status'],
@@ -92,7 +93,7 @@ class RegisterController extends Controller
         Session::flush();
         Auth::logout();
 
-        Session::flash('post-register', 'You have successfully registered! Please wait for the admin to verify your account.');
+        Session::flash('post-register', 'Registration completed! Please wait for the admin to verify your account.');
 
         return redirect()->route('login.page');
     }

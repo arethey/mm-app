@@ -31,6 +31,7 @@ trait UserRegistrationTrait {
                 'first_name' => $form_data['first_name'],
                 'middle_name' => $form_data['middle_name'] ?? null,
                 'last_name' => $form_data['last_name'],
+                'address' => $form_data['address'] ?? null,
                 'email' => $form_data['email'] ?? null,
                 'birthdate' => date('Y-m-d', strtotime($form_data['birthdate'])),
                 'menstruation_status' => $form_data['menstruation_status'] ?? null,

@@ -1,18 +1,18 @@
 <form autocomplete="off" id="newFeminineForm" novalidate="novalidate">
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-lg-4 col-sm-12">
             <div class="form-group">
                 <label for="first_name">First Name</label>
                 <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Enter first name">
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-lg-4 col-sm-12">
             <div class="form-group">
                 <label for="middle_name">Middle Name</label>
                 <input type="text" class="form-control" id="middle_name" name="middle_name" placeholder="Enter middle name (optional)">
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-lg-4 col-sm-12">
             <div class="form-group">
                 <label for="last_name">Last Name</label>
                 <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Enter last name">
@@ -20,12 +20,24 @@
         </div>
     </div>
 
-    <div class="form-group">
-        <label for="birthdate">Birthdate</label>
-        <div class="input-group date datepicker" id="birthdate_datepicker">
-            <input type="text" id="birthdate" name="birthdate" class="form-control"><span class="input-group-addon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></span>
+    <div class="row">
+        <div class="col-lg-8 col-sm-12">
+            <div class="form-group">
+                <label for="address">Address</label>
+                <input type="text" class="form-control" id="address" name="address" placeholder="Enter address">
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-sm-12">
+            <div class="form-group">
+                <label for="birthdate">Birthdate</label>
+                <div class="input-group date datepicker" id="birthdate_datepicker">
+                    <input type="text" id="birthdate" name="birthdate" class="form-control"><span class="input-group-addon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></span>
+                </div>
+            </div>
         </div>
     </div>
+
     <div class="form-group">
         <label for="email_address">Active Email</label>
         <input type="email" class="form-control" id="email_address" name="email_address" placeholder="Enter an active email ex: juany@sample.com">

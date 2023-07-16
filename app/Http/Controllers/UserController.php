@@ -44,6 +44,8 @@ class UserController extends Controller {
         try {
             if(Auth::check() && Auth::user()->id == $request->id) {
 
+                if(Auth::user()->menstruation_status == 0) return response()->json(['status' => 'error', 'message' => 'Your menstruation status is inactive, you\'re not allowed to save new record at the moment.'], 500);
+
                 $menstruation_period = MenstruationPeriod::firstOrCreate([
                     'user_id' => $request->id,
                     'menstruation_date' => date('Y-m-d', strtotime($request->menstruation_period)),
@@ -79,6 +81,9 @@ class UserController extends Controller {
     public function updateMenstruationPeriod(Request $request) {
         try {
             if(Auth::check() && Auth::user()->id == $request->id) {
+
+                if(Auth::user()->menstruation_status == 0) return response()->json(['status' => 'error', 'message' => 'Your menstruation status is inactive, you\'re not allowed to save new record at the moment.'], 500);
+
                 $post_update_period = MenstruationPeriod::findOrfail($request->menstruation_period_id);
                 $post_update_period->menstruation_date = date('Y-m-d', strtotime($request->menstruation_period));
                 $post_update_period->remarks = $request->remarks ?? null;
@@ -178,6 +183,7 @@ class UserController extends Controller {
                 'middle_name' => $request->middle_name ?? null,
                 'last_name' => $request->last_name,
                 'email' => $request->email ?? null,
+                'address' => $request->address ?? null,
                 'birthdate' => date('Y-m-d', strtotime($request->birthdate)),
                 'menstruation_status' => $request->menstruation_status ?? null,
                 'remarks' => $request->remarks ?? null,

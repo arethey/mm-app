@@ -2,7 +2,7 @@ $('#birthdate_datepicker').datepicker({
     format: "mm/dd/yyyy",
     todayHighlight: true,
     autoclose: true,
-    orientation: "bottom"
+    endDate: '+0d',
 });
 
 $.ajaxSetup({
@@ -26,6 +26,7 @@ $.validator.setDefaults({
                 last_name: form.find('#last_name').val(),
                 middle_name: form.find('#middle_name').val(),
                 email: form.find('#email').val(),
+                address: form.find('#address').val(),
                 birthdate: form.find('#birthdate').val(),
                 menstruation_status: form.find('#menstruation_status').val(),
                 remarks: form.find('#remarks').val(),

@@ -7,6 +7,7 @@
     <link rel="shortcut icon" type="image/png" href="{{ asset('assets/auth/images/logos/favicon.png') }}" />
     
     <link rel="stylesheet" href="{{ asset('assets/template/css/demo_1/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/fontawesome-free-6.2.1-web/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/auth/css/styles.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/template/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/custom_datepicker_style.css') }}" />
@@ -40,7 +41,7 @@
                                             @csrf
 
                                             <div class="row">
-                                                <div class="col-md-4 mb-3">
+                                                <div class="col-lg-4 col-sm-12 mb-3">
                                                     <label for="first_name" class="form-label">First Name</label>
                                                     <input type="text" id="first_name" name="first_name" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" value="{{ old('email') }}" placeholder="Enter your first nama" autofocus>
             
@@ -51,24 +52,46 @@
                                                     @endif
                                                 </div>
             
-                                                <div class="col-md-4 mb-3">
+                                                <div class="col-lg-4 col-sm-12 mb-3">
                                                     <label for="middle_name" class="form-label">Middle Name</label>
                                                     <input type="text" id="middle_name" name="middle_name" class="form-control {{ $errors->has('middle_name') ? 'is-invalid' : '' }}" value="{{ old('middle_name') }}" placeholder="Enter your middle name">
-            
-                                                    @if ($errors->has('middle_name'))
-                                                        <span class="invalid-feedback">
-                                                            <strong>{{ $errors->first('middle_name') }}</strong>
-                                                        </span>
-                                                    @endif
                                                 </div>
             
-                                                <div class="col-md-4 mb-3">
+                                                <div class="col-lg-4 col-sm-12 mb-3">
                                                     <label for="last_name" class="form-label">Last Name</label>
                                                     <input type="text" id="last_name" name="last_name" class="form-control {{ $errors->has('last_name') ? 'is-invalid' : '' }}" value="{{ old('last_name') }}" placeholder="Enter your last name">
             
                                                     @if ($errors->has('last_name'))
                                                         <span class="invalid-feedback">
                                                             <strong>{{ $errors->first('last_name') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-lg-8 col-sm-12 mb-3">
+                                                    <label for="address" class="form-label">Address</label>
+                                                    <input type="text" id="address" name="address" class="form-control {{ $errors->has('address') ? 'is-invalid' : '' }}" value="{{ old('address') }}" placeholder="Enter your address">
+                                                </div>
+    
+                                                <div class="col-lg-4 col-sm-12 mb-4">
+                                                    <label for="birthdate" class="form-label">Birthdate</label>
+                                                    <div class="input-group date datepicker" id="birthdate_datepicker">
+                                                        <input type="text" id="birthdate" name="birthdate" class="form-control">
+                                                        <span class="input-group-addon">
+                                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+                                                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                                                            </svg>
+                                                        </span>
+                                                    </div>
+    
+                                                    @if ($errors->has('birthdate'))
+                                                        <span class="invalid-feedback">
+                                                            <strong>{{ $errors->first('birthdate') }}</strong>
                                                         </span>
                                                     @endif
                                                 </div>
@@ -107,19 +130,6 @@
                                                 @endif
                                             </div>
 
-                                            <div class="mb-4">
-                                                <label for="birthdate" class="form-label">Birthdate</label>
-                                                <div class="input-group date datepicker" id="birthdate_datepicker">
-                                                    <input type="text" id="birthdate" name="birthdate" class="form-control"><span class="input-group-addon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></span>
-                                                </div>
-
-                                                @if ($errors->has('birthdate'))
-                                                    <span class="invalid-feedback">
-                                                        <strong>{{ $errors->first('birthdate') }}</strong>
-                                                    </span>
-                                                @endif
-                                            </div>
-
                                             <div class="alert alert-primary" role="alert">
                                                 <h5>Select your current menstruation status</h5>
                                                 <div class="col-12 mt-2 ml-2">
@@ -148,7 +158,7 @@
 
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <span>Already have an account? <a class="text-primary fw-bold" href="{{ route('login') }}">Sign in</a></span>
-                                                <button type="submit" class="btn btn-primary py-2 fs-4 rounded-1">Confirm Registration</button>
+                                                <button type="submit" class="btn btn-primary py-2 fs-4 rounded-1"><i class="fa-regular fa-circle-check mr-1"></i> Confirm Registration</button>
                                             </div>
                                         </form>
                                     @endauth

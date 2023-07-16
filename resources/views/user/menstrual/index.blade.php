@@ -25,7 +25,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-baseline mb-4 mb-md-3">
                         <h6 class="card-title mb-0">Menstrual Data</h6>
-                        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#{{ Auth::user()->menstruation_status == 0 ? 'menstrualPeriodModal' : '404' }}" {{ Auth::user()->menstruation_status == 0 ? 'disabled' : '' }}>
+                        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#{{ Auth::user()->menstruation_status == 1 ? 'menstrualPeriodModal' : '404' }}" {{ Auth::user()->menstruation_status == 0 ? 'disabled' : '' }}>
                             <i class="btn-icon-prepend fa-solid fa-calendar-plus"></i> Add New Menstruation Period
                         </button>
                     </div>

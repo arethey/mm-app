@@ -9,7 +9,13 @@ $('#birthdate_datepicker').datepicker({
     endDate: '+0d',
 });
 
-$('#birthdate_datepicker').datepicker('setDate', today);
+$(document).on('change', '#birthdate', function(e) {
+    if ($(this).hasClass('form-control-danger') || $(document).find('#birthdate_datepicker').hasClass('has-danger')) {
+        $(this).removeClass('form-control-danger');
+        $(document).find('#birthdate_datepicker').removeClass('has-danger');
+        $(document).find('#birthdate-error').remove();
+    }
+});
 
 $("#sign_up_form").validate({
     rules: {

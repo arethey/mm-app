@@ -26,13 +26,13 @@
                         <div class="dropdown-body" id="period_notification_container">
                             @if(count($new_period_notification) != 0)
                                 @foreach($new_period_notification as $new_period)
-                                    <a href="{{ URL::to('admin/feminine-list') }}?p={{ $new_period->id }}" id="period_notification_body_{{ $new_period->id }}" class="dropdown-item">
+                                    <a href="{{ URL::to('admin/feminine-list') }}?p={{ $new_period->user_id }}" id="period_notification_body_{{ $new_period->user_id }}" class="dropdown-item">
                                         <div class="icon">
                                             <i data-feather="user-plus"></i>
                                         </div>
                                         <div class="content">
                                             <p>{{ $new_period->first_name.' '.$new_period->last_name }}</p>
-                                            <p class="sub-text text-muted">New Menstrual Record</p>
+                                            <p class="sub-text text-muted">New Record: {{ $new_period->formatted_menstruation_date }}</p>
                                         </div>
                                     </a>
                                 @endforeach

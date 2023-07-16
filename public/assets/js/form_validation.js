@@ -5,7 +5,6 @@ $('#last_period_datepicker').datepicker({
     format: "mm/dd/yyyy",
     todayHighlight: true,
     autoclose: true,
-    orientation: "bottom",
     endDate: '+0d',
 });
 
@@ -13,7 +12,7 @@ $('#birthdate_datepicker').datepicker({
     format: "mm/dd/yyyy",
     todayHighlight: true,
     autoclose: true,
-    orientation: "bottom"
+    endDate: '+0d',
 });
 
 $('#last_period_datepicker').datepicker('setDate', today);
@@ -38,6 +37,7 @@ $.validator.setDefaults({
                 first_name: form.find('#first_name').val(),
                 last_name: form.find('#last_name').val(),
                 middle_name: form.find('#middle_name').val(),
+                address: form.find('#address').val(),
                 email: form.find('#email_address').val(),
                 birthdate: form.find('#birthdate').val(),
                 menstruation_status: form.find('#menstruation_status').val(),

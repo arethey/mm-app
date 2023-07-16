@@ -18,6 +18,7 @@ $.validator.setDefaults({
                 edit_menstruation_period_id: form.find('#edit_menstruation_period_id').val(),
                 first_name: form.find('#edit_first_name').val(),
                 last_name: form.find('#edit_last_name').val(),
+                address: form.find('#edit_address').val(),
                 middle_name: form.find('#edit_middle_name').val(),
                 email: form.find('#edit_email_address').val(),
                 birthdate: form.find('#edit_birthdate').val(),

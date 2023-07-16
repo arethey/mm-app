@@ -95,7 +95,7 @@ class AdminController extends Controller {
         $feminine_arr = User::with('last_periods')
             ->where('user_role_id', 2)
             ->orderBy('last_name', 'ASC')
-            ->get(['id', 'first_name', 'last_name', 'middle_name', 'email', 'birthdate', 'menstruation_status', 'is_active', 'remarks'])
+            ->get(['id', 'first_name', 'last_name', 'middle_name', 'address', 'email', 'birthdate', 'menstruation_status', 'is_active', 'remarks'])
             ->toArray();
 
         $row_count = 0;
@@ -118,6 +118,7 @@ class AdminController extends Controller {
                 <button type="button" class="btn btn-sm btn-secondary" id="period_notif_'. $feminine['id'] .'"
                     data-full_name="'.$full_name.'"
                     data-email="'.$feminine['email'].'"
+                    data-address="'.$feminine['address'].'"
                     data-birthdate="'. ($feminine['birthdate'] ? date('F j, Y', strtotime($feminine['birthdate'])) : 'N/A') .'"
                     data-menstruation_status="'.$feminine['menstruation_status'].'"
                     data-is_active="'.$feminine['is_active'].'"
@@ -133,6 +134,7 @@ class AdminController extends Controller {
                     data-last_name="'.$feminine['last_name'].'"
                     data-middle_name="'.$feminine['middle_name'].'"
                     data-email="'.$feminine['email'].'"
+                    data-address="'.$feminine['address'].'"
                     data-birthdate="'. ($feminine['birthdate'] ? date('m/d/Y', strtotime($feminine['birthdate'])) : null) .'"
                     data-menstruation_status="'.$feminine['menstruation_status'].'"
                     data-remarks="'.($feminine['remarks'] ?? null).'"

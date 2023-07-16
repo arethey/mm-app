@@ -13,7 +13,6 @@ $('#menstruation_period_datepicker').datepicker({
     todayHighlight: true,
     autoclose: true,
     endDate: '+0d',
-    orientation: "bottom"
 });
 
 $.ajaxSetup({
