@@ -32,6 +32,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('admin/confirm-feminine', [AdminController::class, 'confirmFeminine']);
         Route::post('admin/update-feminine', [AdminController::class, 'postFeminine']);
         Route::post('admin/delete-feminine', [AdminController::class, 'deleteFeminie']);
+        Route::post('admin/post-seen/period-notification', [AdminController::class, 'postSeenPeriodNotification']);
 
         Route::get('admin/calendar', [AdminController::class, 'calendarIndex']);
         Route::get('admin/calendar-data', [AdminController::class, 'calendarData']);

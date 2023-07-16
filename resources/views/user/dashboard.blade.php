@@ -4,33 +4,7 @@
 @section('styles')
     <link rel="stylesheet" href="{{ asset('assets/css/dashboard_card.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/template/vendors/fullcalendar/fullcalendar.min.css') }}">
-
-    <style>
-        .fc-unthemed .fc-today {
-            background: #f3f3fe !important;
-        }
-        #external-events-listing .fc-event:hover {
-            color: #686868 !important;
-        }
-
-        #menstruation_period-error {
-            margin-right: 1rem !important;
-        }
-
-        .datepicker table tr td.disabled, .datepicker table tr td.disabled:hover {
-            cursor: not-allowed !important;
-        }
-
-        .external-events .previous_periods {
-            border-left: 3px solid #727cf5 !important;
-            background: #f3f3fe !important;
-        }
-
-        .external-events .estimated_period {
-            border-left: 3px solid #fbbc06 !important;
-            background: #fffbf2 !important;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('assets/css/user_dashboard.css') }}">
 @endsection
 
 @section('contents')
@@ -39,7 +13,7 @@
             <h4 class="mb-3 mb-md-0">Welcome back {{ Auth::user()->last_name }}!</h4>
         </div>
         <div class="d-flex align-items-center flex-wrap text-nowrap">
-            <button type="button" class="btn btn-primary btn-icon-text mb-2 mb-md-0" data-toggle="modal" data-target="#menstrualPeriodModal">
+            <button type="button" class="btn btn-primary btn-icon-text mb-2 mb-md-0" data-toggle="modal" data-target="#{{ Auth::user()->menstruation_status == 1 ? 'menstrualPeriodModal' : '404' }}" {{ Auth::user()->menstruation_status == 0 ? 'disabled' : '' }} >
                 <i class="btn-icon-prepend fa-solid fa-file-circle-plus"></i>
                 Add New Menstruation Period
             </button>
@@ -90,7 +64,7 @@
                     <div class="card-body">
                         <h6 class="card-title mb-4">Previous Cycle and Timeline</h6>
                         <div id="external-events" class="external-events">
-                            <div id="external-events-listing">
+                            <div id="external-events-listing" class="{{ count($menstruation_period_list) != 0 ?: 'hidden' }}">
                                 <p class="mb-1">Next Estimated Menstrual Date</p>
                                 <div class="fc-event estimated_period ml-2">&bull; {{ date('F j, Y', strtotime($estimated_next_period)) }}</div>
 
@@ -100,6 +74,7 @@
                                 @endforeach
                             </div>
                         </div>
+                        <p class="mb-1 timeline_no_record {{ count($menstruation_period_list) == 0 ?: 'hidden' }}">No menstrual period recorded yet</p>
                     </div>
                 </div>
             </div>
@@ -116,5 +91,4 @@
     <script src="{{ asset('assets/template/vendors/jquery-ui/jquery-ui.min.js') }}"></script>
 	<script src="{{ asset('assets/template/vendors/moment/moment.min.js') }}"></script>
     <script src="{{ asset('assets/template/vendors/fullcalendar/fullcalendar.min.js') }}"></script>
-    <script src="{{ asset('assets/js/user/calendar_period.js') }}"></script>
 @endsection

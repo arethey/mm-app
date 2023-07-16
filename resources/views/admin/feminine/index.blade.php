@@ -3,16 +3,7 @@
 
 @section('styles')
     <link rel="stylesheet" href="{{ asset('assets/template/vendors/datatables.net-bs4/dataTables.bootstrap4.css') }}">
-
-    <style>
-        .card-title { font-size: 1rem !important; }
-        .btn-sm i { font-size: 0.775rem !important; }
-        #birthdate-error { margin-right: 1rem !important; }
-
-        .datepicker table tr td.disabled, .datepicker table tr td.disabled:hover {
-            cursor: not-allowed !important;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('assets/css/feminine_list.css') }}">
 @endsection
 
 @section('contents')

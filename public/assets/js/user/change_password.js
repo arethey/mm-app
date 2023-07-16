@@ -26,7 +26,7 @@ $.validator.setDefaults({
                         displayMode: 2,
                         layout: 2,
                         drag: false,
-                        position: 'topRight',
+                        position: 'topCenter',
                         title: 'Success!',
                         message: data.message,
                         transitionIn: 'bounceInDown',
@@ -38,7 +38,7 @@ $.validator.setDefaults({
                 iziToast.error({
                     close: false,
                     displayMode: 2,
-                    position: 'topRight',
+                    position: 'topCenter',
                     drag: false,
                     title: 'Oops!',
                     message: response.responseJSON ? response.responseJSON.message : 'Something went wrong, please try again.',

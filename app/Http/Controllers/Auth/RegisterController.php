@@ -8,7 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Support\Facades\Auth;
 use Session;
 
 class RegisterController extends Controller
@@ -31,7 +31,6 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    // protected $redirectTo = RouteServiceProvider::HOME;
     protected $redirectTo = '/';
 
     /**
@@ -70,22 +69,32 @@ class RegisterController extends Controller
      */
     protected function create(array $data) {
         try {
-            Session::flash('post-register', 'You have successfully registered! Please wait for the admin to verify your account.');
-    
             return User::create([
                 'first_name' => $data['first_name'],
                 'last_name' => $data['last_name'],
                 'middle_name' => $data['middle_name'] ?? null,
                 'email' => $data['email'],
+                'address' => $data['address'] ?? null,
                 'birthdate' => date('Y-m-d', strtotime($data['birthdate'])),
                 'password' => Hash::make($data['password']),
                 'menstruation_status' => $data['menstruation_status'],
                 'user_role_id ' => 2, // 2 = default for user only role
                 'is_active' => false, // inactive by default, need to be verified by admin
             ]);
+
+            return $this->registered();
         }
         catch(\Exception $e) {
             return redirect()->back()->withInput()->withErrors(['error' => $e->getMessage()]);
         }
+    }
+
+    protected function registered() {
+        Session::flush();
+        Auth::logout();
+
+        Session::flash('post-register', 'Registration completed! Please wait for the admin to verify your account.');
+
+        return redirect()->route('login.page');
     }
 }

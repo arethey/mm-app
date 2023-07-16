@@ -1,0 +1,16 @@
+.form-control {
+  border-radius: 2px!important
+}
+.text-danger {
+  color: #f36!important
+}
+.ml-2 {
+  margin-left: .5rem!important
+}
+#birthdate-error {
+  margin-right: 1rem!important
+}
+.datepicker table tr td.disabled,
+.datepicker table tr td.disabled:hover {
+  cursor: not-allowed!important
+}

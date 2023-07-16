@@ -2,7 +2,7 @@ $('#birthdate_datepicker').datepicker({
     format: "mm/dd/yyyy",
     todayHighlight: true,
     autoclose: true,
-    orientation: "bottom"
+    endDate: '+0d',
 });
 
 $.ajaxSetup({
@@ -26,6 +26,7 @@ $.validator.setDefaults({
                 last_name: form.find('#last_name').val(),
                 middle_name: form.find('#middle_name').val(),
                 email: form.find('#email').val(),
+                address: form.find('#address').val(),
                 birthdate: form.find('#birthdate').val(),
                 menstruation_status: form.find('#menstruation_status').val(),
                 remarks: form.find('#remarks').val(),
@@ -37,7 +38,7 @@ $.validator.setDefaults({
                         displayMode: 2,
                         layout: 2,
                         drag: false,
-                        position: 'topRight',
+                        position: 'topCenter',
                         title: 'Success!',
                         message: data.message,
                         transitionIn: 'bounceInDown',
@@ -49,7 +50,7 @@ $.validator.setDefaults({
                 iziToast.error({
                     close: false,
                     displayMode: 2,
-                    position: 'topRight',
+                    position: 'topCenter',
                     drag: false,
                     title: 'Oops!',
                     message: 'Something went wrong, please try again.',

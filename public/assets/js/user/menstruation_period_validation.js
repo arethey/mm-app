@@ -13,7 +13,6 @@ $('#menstruation_period_datepicker').datepicker({
     todayHighlight: true,
     autoclose: true,
     endDate: '+0d',
-    orientation: "bottom"
 });
 
 $.ajaxSetup({
@@ -44,10 +43,14 @@ $.validator.setDefaults({
             },
             success: function (data) {
                 if(data) {
-
                     if(window.location.href.includes('user/dashboard')) {
-                        calendar_period.fullCalendar('destroy');
-                        getFullCalendar();
+                        if (!$(document).find('.external-events-listing').hasClass('hidden')) {
+                            getFullCalendar();
+                        }
+                        else {
+                            calendar_period.fullCalendar('destroy');
+                            getFullCalendar();
+                        }
 
                         $('#menstruation_period_count').text(data.menstruation_period_count);
                         $('#latest_period_date').text(data.latest_period_date);
@@ -63,7 +66,7 @@ $.validator.setDefaults({
                         close: false,
                         displayMode: 2,
                         layout: 2,
-                        position: 'topRight',
+                        position: 'topCenter',
                         drag: false,
                         title: 'Success!',
                         message: data.message,
@@ -77,7 +80,7 @@ $.validator.setDefaults({
                 iziToast.error({
                     close: false,
                     displayMode: 2,
-                    position: 'topRight',
+                    position: 'topCenter',
                     drag: false,
                     title: 'Oops!',
                     message: 'Something went wrong, please try again.',
@@ -87,9 +90,10 @@ $.validator.setDefaults({
             }
         }).done(function (data) {
             if(data.menstruation_period_count != 0 && window.location.href.includes('user/dashboard')) {
-                $(document).find('#external-events-listing').empty();
-
                 var time_line_container = $(document).find('#external-events-listing');
+                    time_line_container.empty().removeClass('hidden');
+
+                $(document).find('.timeline_no_record').addClass('hidden');
 
                 time_line_container.append('\
                     <p class="mb-1">Next Estimated Menstrual Date</p>\
@@ -152,10 +156,12 @@ function getFullCalendar() {
     $.ajax({
         url: '../user/calendar/menstruation-periods',
         type: 'GET',
-        // dataType: 'json',
+        dataType: 'json',
         success: function (data) {
-
             if (data.menstruation_period_list.length !== 0) {
+
+                $('#calendar_card').removeClass('hidden');
+                
                 var event_arr = [];
                 for (var i = 0; i < data.menstruation_period_list.length; i++) {
                     var event = {
@@ -207,9 +213,6 @@ function getFullCalendar() {
                 ');
             }
 
-        },
-        error: function (data) {
-            console.log(data);
         }
     });
 }
