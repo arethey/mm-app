@@ -17,8 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('health_worker_id');
             $table->timestamps();
 
-            $table->foreign('feminine_id')->references('id')->on('feminine_health_workers')->onDelete('cascade');
-            $table->foreign('health_worker_id')->references('id')->on('health_workers')->onDelete('cascade');
+            $table->foreign('feminine_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('health_worker_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
