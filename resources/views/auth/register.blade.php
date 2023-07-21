@@ -31,6 +31,9 @@
                                         @if(Auth::user()->user_role_id == 1)
                                             <p class="text-center mb-4">Leaving already? click below to return to dashboard</p>
                                             <a href="{{ URL::to('admin/dashboard') }}" class="btn btn-primary w-100 py-2 fs-4 rounded-1">Return to Dashboard</a>
+                                        @elseif(Auth::user()->user_role_id == 3)
+                                            <p class="text-center mb-4">Leaving already? click below to return to dashboard</p>
+                                            <a href="{{ URL::to('health-worker/dashboard') }}" class="btn btn-primary w-100 py-2 fs-4 rounded-1">Return to Dashboard</a>
                                         @else
                                             <p class="text-center mb-4">Leaving already? click below to return to dashboard</p>
                                             <a href="{{ URL::to('user/dashboard') }}" class="btn btn-primary w-100 py-2 fs-4 rounded-1">Return to Dashboard</a>

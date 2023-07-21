@@ -11,6 +11,11 @@
         .datepicker table tr td.disabled:hover {
             cursor: not-allowed !important;
         }
+
+        #status_chart, #bhw_chart {
+            width: 100%;
+            height: 430px;
+        }
     </style>
 @endsection
 
@@ -68,6 +73,17 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-lg-3 col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Feminine Status Chart</h5>
+                    <div id="status_chart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="newFeminineModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="newFeminineLbl" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -91,4 +107,10 @@
 @section('scripts')
     <script src="{{ asset('assets/template/vendors/jquery-validation/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('assets/js/form_validation.js') }}"></script>
+
+    <script src="{{ asset('assets/amcharts/amcharts.com_lib_5_index.js') }}"></script>
+    <script src="{{ asset('assets/amcharts/amcharts.com_lib_5_percent.js') }}"></script>
+    <script src="{{ asset('assets/amcharts/amcharts.com_lib_5_themes_Animated.js') }}"></script>
+
+    <script src="{{ asset('assets/js/admin/pie_chart.js') }}"></script>
 @endsection

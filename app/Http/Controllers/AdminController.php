@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Models\User;
 use App\Models\MenstruationPeriod;
+use App\Models\FeminineHealthWorkerGroup;
 
 class AdminController extends Controller {
 
@@ -28,9 +29,48 @@ class AdminController extends Controller {
         return view('admin/dashboard', compact('count', 'new_notification', 'new_period_notification'));
     }
 
+    public function pieChartData() {
+        
+        $active_feminine_count = User::where('user_role_id', 2)->where('menstruation_status', 1)->count();
+        $inactive_feminine_count = User::where('user_role_id', 2)->where('menstruation_status', 0)->count();
+        $pending_feminine_count = User::where('user_role_id', 2)->where('is_active', 0)->count();
+
+        $data_response = [];
+        $category_arr = ['Active', 'Inactive', 'Pending'];
+        foreach($category_arr as $category) {
+            if($category === 'Active') {
+                if($active_feminine_count != 0) {
+                    $data_response[] = [
+                        'value' => $active_feminine_count,
+                        'category' => $category,
+                    ];
+                }
+            }
+            else if($category === 'Inactive') {
+                if($inactive_feminine_count != 0) {
+                    $data_response[] = [
+                        'value' => $inactive_feminine_count,
+                        'category' => $category,
+                    ];
+                }
+            }
+            else if($category === 'Pending') {
+                if($pending_feminine_count != 0) {
+                    $data_response[] = [
+                        'value' => $pending_feminine_count,
+                        'category' => $category,
+                    ];
+                }
+            }
+        }
+
+        return response()->json($data_response);
+    }
+
     public function feminineList() {
         $new_notification = $this->signupNotification();
         $new_period_notification = $this->newMenstrualPeriodNotification();
+
         return view('admin/feminine/index', compact('new_notification', 'new_period_notification'));
     }
 
@@ -111,7 +151,7 @@ class AdminController extends Controller {
                 $feminine_arr[$feminine_key]['is_active'] = '<span class="text-success"><strong>&bull;</strong> Verified</span>';
             }
             else {
-                $feminine_arr[$feminine_key]['is_active'] = '<button type="button" class="btn btn-sm btn-success verify_account" id="notif_'. $feminine['id'] .'" data-id="'. $feminine['id'] .'" data-full_name="'. $full_name .'" ><i class="fa-solid fa-user-check"></i> Verify Account</button';
+                $feminine_arr[$feminine_key]['is_active'] = '<button type="button" class="btn btn-sm btn-success verify_account" id="notif_'. $feminine['id'] .'" data-id="'. $feminine['id'] .'" data-full_name="'. $full_name .'" ><i class="fa-solid fa-user-check"></i> Verify Account</button>';
             }
 
             $feminine_arr[$feminine_key]['action'] = '
@@ -212,5 +252,149 @@ class AdminController extends Controller {
                 return response()->json(['status' => 'error', 'message' => 'Something went wrong.']);
             }
         }
+    }
+
+    public function healthWorkerIndex() {
+        $new_notification = $this->signupNotification();
+        $new_period_notification = $this->newMenstrualPeriodNotification();
+            
+        return view('admin/health_worker/index', compact('new_notification', 'new_period_notification'));
+    }
+
+    public function postHealthWorker(Request $request) {
+        return $this->postHealthWorkerForm($request->all());
+    }
+
+    public function deleteHealthWorker(Request $request) {
+        try {
+            $user = User::findOrFail($request->id);
+            if($user) {
+                $user->delete();
+                return response()->json(['status' => 'success', 'message' => 'Health worker successfully deleted.']);
+            }
+            else {
+                return response()->json(['status' => 'error', 'message' => 'Something went wrong, please refresh your browser and sssstry again.']);
+            }
+
+        }
+        catch(\ModelNotFoundException $e) {
+            return response()->json(['status' => 'error', 'message' => 'Something went wrong, please try again.']);
+        }
+    }
+
+    public function healthWorkerFeminineList(Request $request) {
+
+        $assigned_feminine_list = $this->assignedFeminineList($request->health_worker_id);
+
+        $feminine_list = User::where('user_role_id', 2)
+            ->where('is_active', 1)
+            ->whereNotIn('id', $assigned_feminine_list->pluck('id')->toArray())
+            ->select(['id',  \DB::raw("CONCAT(users.last_name,', ',users.first_name) AS full_name")])->get();
+
+        $data = [
+            'assigned_feminine_list' => $assigned_feminine_list,
+            'feminine_list' => $feminine_list
+        ];
+
+        return response()->json($data);
+    }
+
+    public function postAssignFeminine(Request $request) {
+
+        if($request['feminine_id'] && count($request['feminine_id']) != 0) {
+            foreach($request['feminine_id'] as $user_id) {
+                $post_assign_health_worker = FeminineHealthWorkerGroup::firstOrCreate([
+                    'feminine_id' => $user_id,
+                    'health_worker_id' => $request->id
+                ]);
+            }
+            return response()->json(['status' => 'success', 'message' => count($request['feminine_id']).' Feminine successfully assigned.']);
+        }
+        else {
+            return response()->json(['status' => 'error', 'message' => 'Please select at least one feminine.']);
+        }
+    }
+
+    public function deleteAssignFeminine(Request $request) {
+        try {
+            $delete_assigned_feminine = FeminineHealthWorkerGroup::findOrFail($request->id);
+            $health_worker_id = $delete_assigned_feminine->health_worker_id;
+
+            $delete_assigned_feminine->delete();
+
+            return response()->json(['status' => 'success', 'message' => 'Feminine successfully deleted.', 'updated_count' => count($this->assignedFeminineList($health_worker_id))]);
+        }
+        catch(\ModelNotFoundException $e) {
+            return response()->json(['status' => 'error', 'message' => 'Something went wrong, please try again.']);
+        }
+    }
+
+    public function healthWorkerData() {
+        $health_worker_arr = User::where('user_role_id', 3)
+            ->orderBy('last_name', 'ASC')
+            ->get(['id', 'first_name', 'last_name', 'middle_name', 'address', 'email', 'birthdate', 'is_active', 'remarks'])
+            ->toArray();
+
+        $row_count = 0;
+        foreach($health_worker_arr as $health_worker_key => $health_worker) {
+
+            $assigned_feminine_list = $this->assignedFeminineList($health_worker['id'])->toJson();
+
+            $full_name = $health_worker['last_name'].', '.$health_worker['first_name'].' '.$health_worker['middle_name'];
+
+            $health_worker_arr[$health_worker_key]['row_count'] = ++$row_count;
+            $health_worker_arr[$health_worker_key]['full_name'] = $full_name;
+            $health_worker_arr[$health_worker_key]['is_active'] = '<span class="text-'. ($health_worker['is_active'] == 1 ? 'success' : 'danger') .'"><strong>&bull;</strong> '. ($health_worker['is_active'] == 1 ? 'Active' : 'Inactive') .'</span>';
+            $health_worker_arr[$health_worker_key]['action'] = '
+
+                <button type="button" class="btn btn-sm btn-secondary"
+                    data-full_name="'.$full_name.'"
+                    data-email="'.$health_worker['email'].'"
+                    data-address="'.$health_worker['address'].'"
+                    data-birthdate="'. ($health_worker['birthdate'] ? date('F j, Y', strtotime($health_worker['birthdate'])) : 'N/A') .'"
+                    data-is_active="'.$health_worker['is_active'].'"
+                    data-remarks="'. ($health_worker['remarks'] ?? 'N/A') .'"
+                    data-assigned_feminine_list="'. htmlspecialchars(json_encode($this->assignedFeminineList($health_worker['id']))) .'"
+                    data-toggle="modal" data-target="#viewHealthWorkerModal">
+                        <i class="fa-solid fa-magnifying-glass"></i> View
+                </button>
+
+                <button type="button" class="btn btn-sm btn-dark" data-toggle="modal" data-target="#assignFeminineModal" 
+                    data-health_worker_name="'.$full_name.'"
+                    data-id="'.$health_worker['id'].'">
+                        <i class="fa-solid fa-user-tag"></i> Assigning
+                </button>
+                
+                <button type="button" class="btn btn-sm btn-primary"
+                    data-id="'.$health_worker['id'].'"
+                    data-first_name="'.$health_worker['first_name'].'"
+                    data-last_name="'.$health_worker['last_name'].'"
+                    data-middle_name="'.$health_worker['middle_name'].'"
+                    data-email="'.$health_worker['email'].'"
+                    data-address="'.$health_worker['address'].'"
+                    data-birthdate="'. ($health_worker['birthdate'] ? date('m/d/Y', strtotime($health_worker['birthdate'])) : null) .'"
+                    data-remarks="'.($health_worker['remarks'] ?? null).'"
+                    data-toggle="modal" data-target="#editHealthWorkerModal">
+                        <i class="fa-solid fa-user-pen"></i> Edit
+                </button>
+
+                <button type="button" class="btn btn-sm btn-danger delete_record" data-id="'.$health_worker['id'].'"><i class="fa-solid fa-trash"></i> Delete</button>
+            ';
+        }
+
+        return response()->json(['data'=>$health_worker_arr, "recordsFiltered"=>count($health_worker_arr), 'recordsTotal'=>count($health_worker_arr)]);
+    }
+
+    private function assignedFeminineList($health_worker_id) {
+        return $assigned_feminine_list = FeminineHealthWorkerGroup::where('health_worker_id', $health_worker_id)
+            ->with('feminine:id,last_name,first_name')
+            ->get(['feminine_id', 'feminine_health_worker_groups.id as feminine_health_worker_group_id'])
+            ->map(function ($item) {
+                return [
+                    'id' => $item->feminine->id,
+                    'feminine_health_worker_group_id' => $item->feminine_health_worker_group_id,
+                    'full_name' => $item->feminine->full_name(),
+                ];
+            });
     }
 }

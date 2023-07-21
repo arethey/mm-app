@@ -98,7 +98,7 @@ $(function () {
                 var dateText = month_arr[last_period_date.getMonth()] + " " + last_period_date.getDate() + ", " + last_period_date.getFullYear();
                 var period_date = $('<p class="text-muted m-0">• ' + dateText + '</p>');
     
-                if (created_at.toDateString() == currentDate.toDateString()) {
+                if (created_at.toDateString() <= currentDate.toDateString()) {
                     var new_label = $('<span class="badge badge-pill badge-success ml-2">New</span>');
                     period_date.append(new_label);
 

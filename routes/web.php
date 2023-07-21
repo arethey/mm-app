@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\BarangayHealthWorkerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +29,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('admin/feminine-list', [AdminController::class, 'feminineList']);
         Route::get('admin/feminine-data', [AdminController::class, 'feminineData']);
+        Route::get('admin/pie-chart-data', [AdminController::class, 'pieChartData']);
         Route::post('admin/new-feminine', [AdminController::class, 'postFeminine']);
         Route::post('admin/confirm-feminine', [AdminController::class, 'confirmFeminine']);
         Route::post('admin/update-feminine', [AdminController::class, 'postFeminine']);
@@ -40,6 +42,15 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('admin/account-settings', [AdminController::class, 'accountSettings']);
         Route::get('admin/account-data', [AdminController::class, 'accountData']);
         Route::post('admin/account-reset', [AdminController::class, 'accountReset']);
+
+        Route::get('admin/health-worker', [AdminController::class, 'healthWorkerIndex']);
+        Route::get('admin/health-worker-data', [AdminController::class, 'healthWorkerData']);
+        Route::get('admin/health-worder/feminine-list', [AdminController::class, 'healthWorkerFeminineList']);
+        Route::post('admin/post-health-worker', [AdminController::class, 'postHealthWorker']);
+        Route::post('admin/update-health-worker', [AdminController::class, 'postHealthWorker']);
+        Route::post('admin/delete-health-worker', [AdminController::class, 'deleteHealthWorker']);
+        Route::post('admin/health-worker/post-assign-feminine', [AdminController::class, 'postAssignFeminine']);
+        Route::post('admin/health-worker/delete-assign-feminine', [AdminController::class, 'deleteAssignFeminine']);
     });
 
     // User Routes
@@ -58,6 +69,23 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('user/profile', [UserController::class, 'profileIndex']);
         Route::post('user/update-profile', [UserController::class, 'updateProfile']);
         Route::post('user/change-password', [UserController::class, 'changePassword']);
+    });
+
+    Route::middleware(['role:health_worker'])->group(function () {
+        Route::get('health-worker/dashboard', [BarangayHealthWorkerController::class, 'index'])->name('health-worker.dashboard');
+        
+        Route::get('health-worker/feminine-list', [BarangayHealthWorkerController::class, 'feminineList']);
+        Route::get('health-worker/feminine-data', [BarangayHealthWorkerController::class, 'feminineData']);
+        Route::get('health-worker/assign-feminine-list', [BarangayHealthWorkerController::class, 'healthWorkerFeminineList']);
+        Route::post('health-worker/new-feminine', [BarangayHealthWorkerController::class, 'postFeminine']);
+        Route::post('health-worker/update-feminine', [BarangayHealthWorkerController::class, 'postFeminine']);
+        Route::post('health-worker/delete-feminine', [BarangayHealthWorkerController::class, 'deleteFeminie']);
+        Route::post('health-worker/post-assign-feminine', [BarangayHealthWorkerController::class, 'postAssignFeminine']);
+
+        Route::get('health-worker/calendar', [BarangayHealthWorkerController::class, 'calendarIndex']);
+        Route::get('health-worker/calendar-data', [BarangayHealthWorkerController::class, 'calendarData']);
+
+        Route::get('health-worker/account', [BarangayHealthWorkerController::class, 'accountSettings']);
     });
 });
 

@@ -56,4 +56,8 @@ class User extends Authenticatable
             ->orderBy('menstruation_date', 'desc')
             ->select(['id', 'user_id', 'menstruation_date', 'remarks', 'created_at']);
     }
+
+    public function full_name() {
+        return $this->last_name . ', ' . $this->first_name;
+    }
 }

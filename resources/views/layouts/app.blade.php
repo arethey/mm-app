@@ -70,6 +70,8 @@
     <div class="main-wrapper">
         @if(Auth::user()->user_role_id == 1)
             @include('layouts.admin_sidebar')
+        @elseif(Auth::user()->user_role_id == 3)
+            @include('layouts.health_worker_sidebar')
         @else
             @include('layouts.user_sidebar')
         @endif

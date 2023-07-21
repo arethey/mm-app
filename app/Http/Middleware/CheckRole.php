@@ -11,7 +11,13 @@ use Symfony\Component\HttpFoundation\Response;
 class CheckRole {
     public function handle(Request $request, Closure $next, ...$roles): Response {
 
-        $user_role = Auth::user()->user_role_id == 1 ? 'admin' : 'user';
+        $user_roles = [
+            1 => 'admin',
+            2 => 'user',
+            3 => 'health_worker',
+        ];
+
+        $user_role = $user_roles[Auth::user()->user_role_id] ?? 'unknown role';
 
         if (!Auth::check() || !in_array($user_role, $roles)) {
             abort(403, 'Unauthorized');

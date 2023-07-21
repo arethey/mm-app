@@ -44,6 +44,9 @@ class LoginController extends Controller
             if($this->auth->user()->user_role_id == 1) {
                 return redirect()->route('admin.dashboard');
             }
+            else if($this->auth->user()->user_role_id == 3) {
+                return redirect()->route('health-worker.dashboard');
+            }
             else {
                 if($this->auth->user()->is_active == 1) {
                     return redirect()->route('user.dashboard');
