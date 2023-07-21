@@ -30,6 +30,7 @@ $(function () {
                 { data: 'row_count' },
                 { data: 'full_name' },
                 { data: 'menstruation_status' },
+                { data: 'is_assigned' },
                 { data: 'is_active' },
                 { data: 'action' }
             ],
@@ -70,10 +71,20 @@ $(function () {
     });
 
     $('#viewFeminineModal').on('show.bs.modal', function (e) {
+
         var button = $(e.relatedTarget);
         var last_period_dates = button.data('last_period_dates');
+        var assigned_bhw = button.data('assign_bhw');
 
         var modal = $(this);
+
+        if (assigned_bhw.length != 0) {
+            modal.find('.modal-body #view_assigned_health_worker').empty().append(assigned_bhw);
+        }
+        else {
+            modal.find('.modal-body #view_assigned_health_worker').empty().append('<p class="text-muted m-0">• No assigned health worker yet</p>');
+        }
+
         modal.find('.modal-body #view_name').text(button.data('full_name'));
         modal.find('.modal-body #view_email').text(button.data('email'));
         modal.find('.modal-body #view_birthdate').text(button.data('birthdate'));
@@ -84,6 +95,8 @@ $(function () {
 
         modal.find('.modal-body #view_menstruation_status')
             .text(button.data('menstruation_status') === 1 ? '• Active' : '• Inactive');
+
+
 
         if (last_period_dates.length != 0) {
             $.each(last_period_dates, function (i, value) {
@@ -119,7 +132,7 @@ $(function () {
                         if (res.new_notification_count == 0) {
                             $(document).find('#period_notification_indicator').addClass('hidden')
                             $(document).find('.period_notification_count').text('No Notifications');
-                            $(document).find('#period_notification_container').append('\
+                            $(document).find('#period_notification_container').empty().append('\
                                 <a href="#" class="dropdown-item">\
                                     <div div class= "icon" >\
                                         <i class="fa-solid fa-mug-hot"></i>\
@@ -199,7 +212,7 @@ $(function () {
                     if (response.new_notification_count == 0) {
                         $(document).find('#notification_indicator').addClass('hidden')
                         $(document).find('.notification_count').text('No Notifications');
-                        $(document).find('#notification_container').append('\
+                        $(document).find('#notification_container').empty().append('\
                             <a href="#" class="dropdown-item">\
                                 <div div class= "icon" >\
                                     <i class="fa-solid fa-mug-hot"></i>\

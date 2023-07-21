@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -119,15 +120,21 @@ trait UserRegistrationTrait {
         }
     }
 
-    private function isBHW() {
-
-    }
-
     private function feminineCount() {
         return [
             'feminine_count' => User::where('user_role_id', 2)->count(),
             'active_feminine_count' => User::where('user_role_id', 2)->where('menstruation_status', 1)->count(),
             'inactive_feminine_count' => User::where('user_role_id', 2)->where('menstruation_status', 0)->count(),
+        ];
+    }
+
+    private function healthWorkerFeminineCount() {
+        $feminine_status = FeminineHealthWorkerGroup::join('users', 'users.id', '=', 'feminine_health_worker_groups.feminine_id')
+            ->where('feminine_health_worker_groups.health_worker_id', Auth::user()->id);
+
+        return [
+            'active_feminine_count' => $feminine_status->where('users.menstruation_status', 1)->count(),
+            'inactive_feminine_count' => $feminine_status->where('users.menstruation_status', 0)->count(),
         ];
     }
 }

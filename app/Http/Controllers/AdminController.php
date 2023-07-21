@@ -19,7 +19,6 @@ class AdminController extends Controller {
     use UserRegistrationTrait;
 
     public function index() {
-
         if(!Auth::check()) return redirect()->route('login')->with('error', 'You don\'t have authorization to access admin portal, please try again.');
 
         $new_notification = $this->signupNotification();
@@ -141,17 +140,35 @@ class AdminController extends Controller {
         $row_count = 0;
         foreach($feminine_arr as $feminine_key => $feminine) {
 
+            $assign_status = FeminineHealthWorkerGroup::where('feminine_id', $feminine['id']);
+
+            if($assign_status->count() != 0) {
+                $assign_health_worker_list = $assign_status->join('users', 'users.id', '=', 'feminine_health_worker_groups.health_worker_id')
+                    ->where('users.user_role_id', 3)
+                    ->get(['users.first_name', 'users.last_name']);
+
+                $assign_health_worker_arr = '';
+                foreach($assign_health_worker_list as $assign_health_worker) {
+                    $assign_health_worker_arr .= '• '.$assign_health_worker->last_name.', '.$assign_health_worker->first_name.'<br>';
+                }
+            }
+
+
             $full_name = $feminine['last_name'].', '.$feminine['first_name'].' '.$feminine['middle_name'];
 
             $feminine_arr[$feminine_key]['row_count'] = ++$row_count;
             $feminine_arr[$feminine_key]['full_name'] = $full_name;
             $feminine_arr[$feminine_key]['menstruation_status'] = '<span class="text-' . ($feminine['menstruation_status'] === 1 ? 'success' : 'danger') . '"><strong>&bull;</strong> ' . ($feminine['menstruation_status'] === 1 ? 'Active' : 'Inactive') . '</span>';
 
+            $feminine_arr[$feminine_key]['is_assigned'] = '
+                <span class="text-' . ($assign_status->count() === 0 ? 'warning' : 'success') . '"><strong>&bull;</strong> ' . ($assign_status->count() === 0 ? 'Not Assigned' : 'Assigned') . '</span>
+            ';
+
             if($feminine['is_active'] === 1) {
                 $feminine_arr[$feminine_key]['is_active'] = '<span class="text-success"><strong>&bull;</strong> Verified</span>';
             }
             else {
-                $feminine_arr[$feminine_key]['is_active'] = '<button type="button" class="btn btn-sm btn-success verify_account" id="notif_'. $feminine['id'] .'" data-id="'. $feminine['id'] .'" data-full_name="'. $full_name .'" ><i class="fa-solid fa-user-check"></i> Verify Account</button>';
+                $feminine_arr[$feminine_key]['is_active'] = '<button type="button" class="btn btn-sm btn-success verify_account" id="notif_'. $feminine['id'] .'" data-id="'. $feminine['id'] .'" data-full_name="'. $full_name .'" ><i class="fa-solid fa-user-check"></i> Verify</button>';
             }
 
             $feminine_arr[$feminine_key]['action'] = '
@@ -164,6 +181,7 @@ class AdminController extends Controller {
                     data-is_active="'.$feminine['is_active'].'"
                     data-remarks="'.($feminine['remarks'] ?? 'N/A').'"
                     data-last_period_dates='.(json_encode(array_slice($feminine['last_periods'], 0, 3)) ?? 'N/A').'
+                    data-assign_bhw="'. ($assign_status->count() != 0 ? $assign_health_worker_arr : null) .'"
                     data-toggle="modal" data-target="#viewFeminineModal">
                         <i class="fa-solid fa-magnifying-glass"></i> View
                 </button>

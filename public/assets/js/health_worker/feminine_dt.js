@@ -83,7 +83,7 @@ $(document).ready(function () {
                             if (res.new_notification_count == 0) {
                                 $(document).find('#period_notification_indicator').addClass('hidden')
                                 $(document).find('.period_notification_count').text('No Notifications');
-                                $(document).find('#period_notification_container').append('\
+                                $(document).find('#period_notification_container').empty().append('\
                                 <a href="#" class="dropdown-item">\
                                     <div div class= "icon" >\
                                         <i class="fa-solid fa-mug-hot"></i>\

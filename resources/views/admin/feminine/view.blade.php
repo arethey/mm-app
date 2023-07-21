@@ -27,4 +27,8 @@
         <label class="tx-11 font-weight-bold mb-0 text-uppercase">Last Recorded Periods:</label>
         <div class="ml-2" id="view_last_periods"></div>
     </div>
+    <div class="mt-3">
+        <label class="tx-11 font-weight-bold mb-0 text-uppercase">Assigned Health Worker:</label>
+        <div class="ml-2 text-muted" id="view_assigned_health_worker"></div>
+    </div>
 </div>

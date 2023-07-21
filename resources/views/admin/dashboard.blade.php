@@ -74,7 +74,7 @@
     </div>
 
     <div class="row">
-        <div class="col-lg-3 col-sm-12">
+        <div class="col-lg-6 col-sm-12">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Feminine Status Chart</h5>

@@ -20,8 +20,9 @@ class BarangayHealthWorkerController extends Controller
     public function index() {
         
         $assign_feminine_count = FeminineHealthWorkerGroup::where('health_worker_id', Auth::user()->id)->count();
+        $count = $this->healthWorkerFeminineCount();
 
-        return view('health_worker.dashboard', compact('assign_feminine_count'));
+        return view('health_worker.dashboard', compact('assign_feminine_count', 'count'));
     }
 
     public function feminineList() {

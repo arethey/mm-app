@@ -10,12 +10,6 @@
         <div>
             <h4 class="mb-3 mb-md-0">Welcome back {{ Auth::user()->last_name }}!</h4>
         </div>
-        <!-- <div class="d-flex align-items-center flex-wrap text-nowrap">
-            <button type="button" class="btn btn-primary btn-icon-text mb-2 mb-md-0" data-toggle="modal" data-target="#{{ Auth::user()->menstruation_status == 1 ? 'menstrualPeriodModal' : '404' }}" {{ Auth::user()->menstruation_status == 0 ? 'disabled' : '' }} >
-                <i class="btn-icon-prepend fa-solid fa-file-circle-plus"></i>
-                Add New Menstruation Period
-            </button>
-        </div> -->
     </div>
 
     <div class="stretch-card">
@@ -32,9 +26,31 @@
                     <a href="{{ URL::to('health-worker/feminine-list') }}" class="card-box-footer">View More <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
+
+            <div class="col-lg-3 col-sm-6">
+                <div class="card-box bg-green shadow-sm">
+                    <div class="inner">
+                        <h3 id="active_feminine_count">{{ $count['active_feminine_count'] }}</h3>
+                        <p>Total Active</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa-solid fa-user-check"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="card-box bg-cyan shadow-sm">
+                    <div class="inner">
+                        <h3 id="inactive_feminine_count">{{ $count['inactive_feminine_count'] }}</h3>
+                        <p>Total Inactive</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa-solid fa-user-tag"></i>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
 @endsection
 
 @section('scripts')
