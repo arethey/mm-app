@@ -25,7 +25,9 @@ class AdminController extends Controller {
         $new_period_notification = $this->newMenstrualPeriodNotification();
         $count = $this->feminineCount();
 
-        return view('admin/dashboard', compact('count', 'new_notification', 'new_period_notification'));
+        $total_period_per_year = MenstruationPeriod::whereYear('menstruation_date', date('Y'))->count();
+
+        return view('admin/dashboard', compact('count', 'new_notification', 'new_period_notification', 'total_period_per_year'));
     }
 
     public function pieChartData() {
@@ -61,6 +63,23 @@ class AdminController extends Controller {
                     ];
                 }
             }
+        }
+
+        return response()->json($data_response);
+    }
+
+    public function graphData() {
+        $year = date('Y');
+        $month_arr = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+        $data_response = [];
+        foreach($month_arr as $month) {
+            $data_response[] = [
+                'month' => $month,
+                'count' => MenstruationPeriod::whereMonth('menstruation_date', date('m', strtotime($month)))
+                    ->whereYear('menstruation_date', $year)
+                    ->count()
+            ];
         }
 
         return response()->json($data_response);
@@ -233,10 +252,10 @@ class AdminController extends Controller {
 
     public function accountData() {
         
-        $feminine_arr = User::where('user_role_id', 2)
+        $feminine_arr = User::whereIn('user_role_id', [2, 3])
             ->where('is_active', 1)
             ->orderBy('last_name', 'ASC')
-            ->get(['id', 'first_name', 'last_name', 'middle_name', 'email', 'menstruation_status'])
+            ->get(['id', 'first_name', 'last_name', 'middle_name', 'email', 'user_role_id'])
             ->toArray();
 
         $row_count = 0;
@@ -246,11 +265,8 @@ class AdminController extends Controller {
 
             $feminine_arr[$feminine_key]['row_count'] = ++$row_count;
             $feminine_arr[$feminine_key]['full_name'] = $full_name;
-            $feminine_arr[$feminine_key]['menstruation_status'] = '<span class="text-' . ($feminine['menstruation_status'] === 1 ? 'success' : 'danger') . '"><strong>&bull;</strong> ' . ($feminine['menstruation_status'] === 1 ? 'Active' : 'Inactive') . '</span>';
-
-            $feminine_arr[$feminine_key]['action'] = '
-                <button type="button" class="btn btn-sm btn-primary reset_password" data-id="'.$feminine['id'].'" data-full_name="'.$full_name.'"><i class="fa-solid fa-key"></i> Reset Password</button>
-            ';
+            $feminine_arr[$feminine_key]['user_role_id'] = '<span class="text-' . ($feminine['user_role_id'] == 2 ? 'success' : 'primary') . '"><strong>&bull;</strong> ' . ($feminine['user_role_id'] == 2 ? 'Feminine' : 'Health Worker') . '</span>';
+            $feminine_arr[$feminine_key]['action'] = '<button type="button" class="btn btn-sm btn-primary reset_password" data-id="'.$feminine['id'].'" data-full_name="'.$full_name.'"><i class="fa-solid fa-key"></i> Reset Password</button>';
         }
 
         return response()->json(['data'=>$feminine_arr, "recordsFiltered"=>count($feminine_arr), 'recordsTotal'=>count($feminine_arr)]);
@@ -263,7 +279,6 @@ class AdminController extends Controller {
                 $post_notification_seen->is_seen = 1;
                 $post_notification_seen->save();
 
-                // return $post_notification_seen->id;
                 return response()->json(['status' => 'success', 'id' => $post_notification_seen->id, 'new_notification_count' => count($this->newMenstrualPeriodNotification())]);
             }
             catch(\ModelNotFoundException $e) {
@@ -363,8 +378,15 @@ class AdminController extends Controller {
             $health_worker_arr[$health_worker_key]['row_count'] = ++$row_count;
             $health_worker_arr[$health_worker_key]['full_name'] = $full_name;
             $health_worker_arr[$health_worker_key]['is_active'] = '<span class="text-'. ($health_worker['is_active'] == 1 ? 'success' : 'danger') .'"><strong>&bull;</strong> '. ($health_worker['is_active'] == 1 ? 'Active' : 'Inactive') .'</span>';
-            $health_worker_arr[$health_worker_key]['action'] = '
+            $health_worker_arr[$health_worker_key]['assigning_action'] = '
+                <button type="button" class="btn btn-sm btn-info text-white" data-toggle="modal" data-target="#assignFeminineModal" 
+                    data-health_worker_name="'.$full_name.'"
+                    data-id="'.$health_worker['id'].'">
+                        <i class="fa-solid fa-user-tag"></i> Assign
+                </button>
+            ';
 
+            $health_worker_arr[$health_worker_key]['action'] = '
                 <button type="button" class="btn btn-sm btn-secondary"
                     data-full_name="'.$full_name.'"
                     data-email="'.$health_worker['email'].'"
@@ -375,12 +397,6 @@ class AdminController extends Controller {
                     data-assigned_feminine_list="'. htmlspecialchars(json_encode($this->assignedFeminineList($health_worker['id']))) .'"
                     data-toggle="modal" data-target="#viewHealthWorkerModal">
                         <i class="fa-solid fa-magnifying-glass"></i> View
-                </button>
-
-                <button type="button" class="btn btn-sm btn-dark" data-toggle="modal" data-target="#assignFeminineModal" 
-                    data-health_worker_name="'.$full_name.'"
-                    data-id="'.$health_worker['id'].'">
-                        <i class="fa-solid fa-user-tag"></i> Assigning
                 </button>
                 
                 <button type="button" class="btn btn-sm btn-primary"

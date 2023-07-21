@@ -17,9 +17,7 @@ use App\Http\Controllers\BarangayHealthWorkerController;
 |
 */
 
-
 Auth::routes();
-
 Route::view('/', 'auth/login')->name('login.page');
 
 Route::group(['middleware' => 'auth'], function () {
@@ -30,6 +28,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('admin/feminine-list', [AdminController::class, 'feminineList']);
         Route::get('admin/feminine-data', [AdminController::class, 'feminineData']);
         Route::get('admin/pie-chart-data', [AdminController::class, 'pieChartData']);
+        Route::get('admin/graph-data', [AdminController::class, 'graphData']);
         Route::post('admin/new-feminine', [AdminController::class, 'postFeminine']);
         Route::post('admin/confirm-feminine', [AdminController::class, 'confirmFeminine']);
         Route::post('admin/update-feminine', [AdminController::class, 'postFeminine']);
@@ -71,6 +70,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('user/change-password', [UserController::class, 'changePassword']);
     });
 
+    // Health Worker Routes
     Route::middleware(['role:health_worker'])->group(function () {
         Route::get('health-worker/dashboard', [BarangayHealthWorkerController::class, 'index'])->name('health-worker.dashboard');
         
@@ -84,8 +84,12 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('health-worker/calendar', [BarangayHealthWorkerController::class, 'calendarIndex']);
         Route::get('health-worker/calendar-data', [BarangayHealthWorkerController::class, 'calendarData']);
-
+        
         Route::get('health-worker/account', [BarangayHealthWorkerController::class, 'accountSettings']);
+        Route::post('health-worker/update-profile', [BarangayHealthWorkerController::class, 'updateProfile']);
+        Route::post('health-worker/change-password', [BarangayHealthWorkerController::class, 'changePassword']);
+
+        Route::get('health-worker/pie-chart-data', [BarangayHealthWorkerController::class, 'pieChartData']);
     });
 });
 

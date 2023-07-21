@@ -12,7 +12,7 @@
             cursor: not-allowed !important;
         }
 
-        #status_chart, #bhw_chart {
+        #status_chart, #yearly_period {
             width: 100%;
             height: 430px;
         }
@@ -82,6 +82,16 @@
                 </div>
             </div>
         </div>
+        <div class="col-lg-6 col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-1">Yearly Period Rate (by months)</h5>
+                    <p class="text-muted ml-3 mb-0 small">&bull; Year - {{ date('Y') }}</p>
+                    <p class="text-muted ml-3 mb-0 small">&bull; Total - {{ $total_period_per_year }}</p>
+                    <div class="mt-2" id="yearly_period"></div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="modal fade" id="newFeminineModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="newFeminineLbl" aria-hidden="true">
@@ -110,7 +120,9 @@
 
     <script src="{{ asset('assets/amcharts/amcharts.com_lib_5_index.js') }}"></script>
     <script src="{{ asset('assets/amcharts/amcharts.com_lib_5_percent.js') }}"></script>
+    <script src="{{ asset('assets/amcharts/amcharts.com_lib_5_xy.js') }}"></script>
     <script src="{{ asset('assets/amcharts/amcharts.com_lib_5_themes_Animated.js') }}"></script>
 
     <script src="{{ asset('assets/js/admin/pie_chart.js') }}"></script>
+    <script src="{{ asset('assets/js/admin/yearly_period_bar_chart.js') }}"></script>
 @endsection

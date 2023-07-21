@@ -41,7 +41,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="row">
                                         <div class="col-lg-8 col-sm-12">
                                             <div class="form-group">
@@ -77,24 +77,6 @@
                                         </div>
                                     </div>
 
-                                    <div class="row">
-                                        <div class="col">
-                                            <div class="form-group">
-                                                <label for="menstruation_status">Menstruation Status</label>
-                                                <select name="menstruation_status" id="menstruation_status">
-                                                    <option value="1" {{ $user->menstruation_status == 1 ? 'selected' : '' }}>Active</option>
-                                                    <option value="0" {{ $user->menstruation_status == 0 ? 'selected' : '' }}>Inactive</option>
-                                                </select>
-                                                <div class="col-12 mt-2">
-                                                    <small id="menstruation_help" class="form-text text-muted">
-                                                        <li><span class="font-weight-bold">Active</span> - Menstruation is active and not pregnant</li>
-                                                        <li><span class="font-weight-bold">Inactive</span> - Menstruation is not active and might be pregnant</li>
-                                                    </small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
                                     <div class="row">
                                         <div class="col mb-3">
                                             <div class="form-group">
@@ -174,6 +156,6 @@
     <script src="{{ asset('assets/template/vendors/jquery-validation/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('assets/js/user/menstruation_period_validation.js') }}"></script>
 
-    <script src="{{ asset('assets/js/user/profile.js') }}"></script>
-    <script src="{{ asset('assets/js/user/change_password.js') }}"></script>
+    <script src="{{ asset('assets/js/health_worker/profile.js') }}"></script>
+    <script src="{{ asset('assets/js/health_worker/change_password.js') }}"></script>
 @endsection

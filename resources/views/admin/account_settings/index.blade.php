@@ -38,7 +38,7 @@
                                     <th></th>
                                     <th>Name</th>
                                     <th>Active Email</th>
-                                    <th>Menstrual Status</th>
+                                    <th>User Role</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>

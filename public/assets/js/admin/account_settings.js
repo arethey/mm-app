@@ -12,7 +12,7 @@ $(function () {
             { data: 'row_count' },
             { data: 'full_name' },
             { data: 'email' },
-            { data: 'menstruation_status' },
+            { data: 'user_role_id' },
             { data: 'action' }
         ]
     });

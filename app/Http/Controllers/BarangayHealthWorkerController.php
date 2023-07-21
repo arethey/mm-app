@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Traits\UserRegistrationTrait;
 
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 use App\Models\User;
 use App\Models\MenstruationPeriod;
@@ -119,7 +121,7 @@ class BarangayHealthWorkerController extends Controller
 
     public function calendarData() {
 
-        // only the active accounts and those who are under to this bhw will be processed in the calendar
+        // only the active accounts and those who are under the care of this bhw will be processed in the calendar
         $user_list = FeminineHealthWorkerGroup::join('users', 'users.id', '=', 'feminine_health_worker_groups.feminine_id')
             ->where('feminine_health_worker_groups.health_worker_id', Auth::user()->id)
             ->where('users.user_role_id', 2)
@@ -168,7 +170,113 @@ class BarangayHealthWorkerController extends Controller
     }
 
     public function accountSettings() {
-        abort(503);
+        if(!Auth::check()) {
+            Session::flash('auth-error', 'Please login to continue.');
+            return redirect()->route('login.page');
+        }
+
+        try {
+            $user = User::findOrFail(Auth::user()->id);
+            return view('health_worker/profile/index', compact('user'));
+        }
+        catch(ModelNotFoundException $e) {
+            Session::flash('auth-error', 'Please login to continue.');
+            return redirect()->route('login.page');
+        }
+    }
+
+    public function updateProfile(Request $request) {
+        try {
+            $check_validation = Validator::make($request->all(), [ 
+                'first_name' => 'required|max:100',
+                'last_name' => 'required|max:100',
+                'email' => 'required|email|max:100',
+                'birthdate' => 'required|date|before:today'
+            ]);
+
+            if($check_validation->fails()) return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
+
+            if(!isset($request->id)) return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
+
+            if(Auth::user()->id != $request->id) return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
+
+            $user_data = User::findOrFail($request->id);
+            $user_data->fill([
+                'first_name' => $request->first_name,
+                'middle_name' => $request->middle_name ?? null,
+                'last_name' => $request->last_name,
+                'email' => $request->email ?? null,
+                'address' => $request->address ?? null,
+                'birthdate' => date('Y-m-d', strtotime($request->birthdate)),
+                'remarks' => $request->remarks ?? null,
+            ]);
+            $user_data->save();
+
+            return response()->json(['success' => true, 'message' => 'Profile successfully updated'], 200);
+        }
+        catch(\ModelNotFoundException $e) {
+            return response()->json(['status'=>'error', 'message'=>'User not found, please refresh your browser and try again'], 404);
+        }
+        catch(\Exception $e) {
+            return response()->json(['status'=>'error', 'message'=>$e->getMessage()], 500);
+        }
+    }
+
+    public function changePassword(Request $request) {
+        try {
+            $check_validation = Validator::make($request->all(), [ 
+                'old_password' => 'required',
+                'new_password' => 'required|confirmed|min:6',
+                'new_password_confirmation' => 'required|min:6'
+            ]);
+
+            if($check_validation->fails()) return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
+
+            if(!isset($request->id)) return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
+
+            if(Auth::user()->id != $request->id) return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
+
+            $user_data = User::findOrFail($request->id);
+
+            if(!Hash::check($request->old_password, $user_data->password)) return response()->json(['success' => false, 'message' => 'Old password is incorrect, please try again.'], 500);
+
+            $user_data->fill(['password' => Hash::make($request->new_password)]);
+            $user_data->save();
+
+            return response()->json(['success' => true, 'message' => 'Password successfully changed'], 200);
+        }
+        catch(\ModelNotFoundException $e) {
+            return response()->json(['status'=>'error', 'message'=>'User not found, please refresh your browser and try again'], 404);
+        }
+    }
+
+    public function pieChartData() {
+
+        $active_feminine_count = User::where('user_role_id', 2)->where('menstruation_status', 1)->count();
+        $inactive_feminine_count = User::where('user_role_id', 2)->where('menstruation_status', 0)->count();
+
+        $data_response = [];
+        $category_arr = ['Active', 'Inactive'];
+        foreach($category_arr as $category) {
+            if($category === 'Active') {
+                if($active_feminine_count != 0) {
+                    $data_response[] = [
+                        'value' => $active_feminine_count,
+                        'category' => $category,
+                    ];
+                }
+            }
+            else if($category === 'Inactive') {
+                if($inactive_feminine_count != 0) {
+                    $data_response[] = [
+                        'value' => $inactive_feminine_count,
+                        'category' => $category,
+                    ];
+                }
+            }
+        }
+
+        return response()->json($data_response);
     }
 
     private function assignedFeminineList($health_worker_id) {

@@ -1,15 +1,15 @@
 am5.ready(function () {
     var root = am5.Root.new("status_chart");
-    
+
     root.setThemes([
         am5themes_Animated.new(root)
     ]);
-    
+
     var chart = root.container.children.push(am5percent.PieChart.new(root, {
         layout: root.verticalLayout,
         radius: am5.percent(70)
     }));
-    
+
     var series = chart.series.push(am5percent.PieSeries.new(root, {
         valueField: "value",
         categoryField: "category",
@@ -23,7 +23,7 @@ am5.ready(function () {
     });
 
     $.ajax({
-        url: '../admin/pie-chart-data',
+        url: '../health-worker/pie-chart-data',
         type: 'GET',
         success: function (data) {
             series.data.setAll(data);

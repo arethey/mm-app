@@ -129,12 +129,19 @@ trait UserRegistrationTrait {
     }
 
     private function healthWorkerFeminineCount() {
-        $feminine_status = FeminineHealthWorkerGroup::join('users', 'users.id', '=', 'feminine_health_worker_groups.feminine_id')
-            ->where('feminine_health_worker_groups.health_worker_id', Auth::user()->id);
+        $active = FeminineHealthWorkerGroup::join('users', 'users.id', '=', 'feminine_health_worker_groups.feminine_id')
+            ->where('feminine_health_worker_groups.health_worker_id', Auth::user()->id)
+            ->where('users.menstruation_status', 1)
+            ->count();
+
+        $inactive = FeminineHealthWorkerGroup::join('users', 'users.id', '=', 'feminine_health_worker_groups.feminine_id')
+            ->where('feminine_health_worker_groups.health_worker_id', Auth::user()->id)
+            ->where('users.menstruation_status', 0)
+            ->count();
 
         return [
-            'active_feminine_count' => $feminine_status->where('users.menstruation_status', 1)->count(),
-            'inactive_feminine_count' => $feminine_status->where('users.menstruation_status', 0)->count(),
+            'active_feminine_count' => $active,
+            'inactive_feminine_count' => $inactive,
         ];
     }
 }

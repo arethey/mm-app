@@ -52,6 +52,7 @@
                                     <th></th>
                                     <th>Name</th>
                                     <th>Account Status</th>
+                                    <th>Assigning Feminine</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>

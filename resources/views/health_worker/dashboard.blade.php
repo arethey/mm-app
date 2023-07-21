@@ -3,6 +3,13 @@
 
 @section('styles')
     <link rel="stylesheet" href="{{ asset('assets/css/dashboard_card.css') }}">
+
+    <style>
+        #status_chart, #yearly_period {
+            width: 100%;
+            height: 430px;
+        }
+    </style>
 @endsection
 
 @section('contents')
@@ -51,8 +58,26 @@
             </div>
         </div>
     </div>
+
+        <div class="row">
+        <div class="col-lg-6 col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Feminine Status Chart</h5>
+                    <div id="status_chart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('scripts')
     <script src="{{ asset('assets/template/vendors/jquery-validation/jquery.validate.min.js') }}"></script>
+
+    <script src="{{ asset('assets/amcharts/amcharts.com_lib_5_index.js') }}"></script>
+    <script src="{{ asset('assets/amcharts/amcharts.com_lib_5_percent.js') }}"></script>
+    <script src="{{ asset('assets/amcharts/amcharts.com_lib_5_xy.js') }}"></script>
+    <script src="{{ asset('assets/amcharts/amcharts.com_lib_5_themes_Animated.js') }}"></script>
+
+    <script src="{{ asset('assets/js/health_worker/pie_chart.js') }}"></script>
 @endsection
