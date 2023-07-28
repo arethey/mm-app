@@ -23,8 +23,9 @@
                                 <tr>
                                     <th></th>
                                     <th>Name</th>
-                                    <th>Menstruation Status</th>
                                     <th>Account Status</th>
+                                    <th>Menstruation Status</th>
+                                    <th>Estimated Menstrual Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>

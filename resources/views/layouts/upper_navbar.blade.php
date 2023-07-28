@@ -4,7 +4,7 @@
     </a>
     <div class="navbar-content">
         <ul class="navbar-nav">
-            @if(Auth::user()->user_role_id == 1)
+            @if(Auth::user()->user_role_id == 1 || Auth::user()->user_role_id == 3)
                 <li class="nav-item dropdown nav-notifications">
                     <a class="nav-link dropdown-toggle" href="#" id="notificationDropdown" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -50,6 +50,7 @@
                     </div>
                 </li>
 
+                @if(Auth::user()->user_role_id == 1)
                 <li class="nav-item dropdown nav-notifications">
                     <a class="nav-link dropdown-toggle" href="#" id="notificationDropdown" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -97,6 +98,7 @@
                         </div>
                     </div>
                 </li>
+                @endif
             @endif
             <li class="nav-item dropdown nav-profile">
                 <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown"

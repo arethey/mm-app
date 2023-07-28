@@ -229,6 +229,10 @@
                             <label class="tx-11 font-weight-bold mb-0 text-uppercase">Last Recorded Periods:</label>
                             <div class="ml-2" id="view_last_periods"></div>
                         </div>
+                        <div class="mt-3">
+                            <label class="tx-11 font-weight-bold mb-0 text-uppercase">Next Estimated Menstrual Date:</label>
+                            <div class="text-muted ml-2" id="view_estimated_periods"></div>
+                        </div>
                     </div>
                 </div>
             </div>

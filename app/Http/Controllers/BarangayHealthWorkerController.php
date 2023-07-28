@@ -14,21 +14,24 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Models\MenstruationPeriod;
 use App\Models\FeminineHealthWorkerGroup;
+use Carbon\Carbon;
 
 class BarangayHealthWorkerController extends Controller
 {
     use UserRegistrationTrait;
 
     public function index() {
+        $new_period_notification = $this->newMenstrualPeriodNotificationForHealthWorker();
         
         $assign_feminine_count = FeminineHealthWorkerGroup::where('health_worker_id', Auth::user()->id)->count();
         $count = $this->healthWorkerFeminineCount();
 
-        return view('health_worker.dashboard', compact('assign_feminine_count', 'count'));
+        return view('health_worker.dashboard', compact('assign_feminine_count', 'count', 'new_period_notification'));
     }
 
     public function feminineList() {
-        return view('health_worker.feminine.index');
+        $new_period_notification = $this->newMenstrualPeriodNotificationForHealthWorker();
+        return view('health_worker.feminine.index', compact('new_period_notification'));
     }
 
     public function postFeminine(Request $request) {
@@ -63,10 +66,13 @@ class BarangayHealthWorkerController extends Controller
 
         $row_count = 0;
         foreach($feminine_arr as $feminine_key => $feminine) {
-
             $full_name = $feminine['last_name'].', '.$feminine['first_name'].' '.$feminine['middle_name'];
             $last_period_list = MenstruationPeriod::where('user_id', $feminine['id'])->orderBy('menstruation_date', 'DESC')->take(3)->get(['id', 'menstruation_date']);
 
+            if(count($last_period_list) !== 0) {
+                $estimated_next_period = $this->estimatedNextPeriod($last_period_list->first()->menstruation_date, $feminine['birthdate']);
+            }
+            
             $feminine_arr[$feminine_key]['row_count'] = ++$row_count;
             $feminine_arr[$feminine_key]['full_name'] = $full_name;
             $feminine_arr[$feminine_key]['menstruation_status'] = '<span class="text-' . ($feminine['menstruation_status'] === 1 ? 'success' : 'danger') . '"><strong>&bull;</strong> ' . ($feminine['menstruation_status'] === 1 ? 'Active' : 'Inactive') . '</span>';
@@ -88,6 +94,7 @@ class BarangayHealthWorkerController extends Controller
                     data-is_active="'.$feminine['is_active'].'"
                     data-remarks="'.($feminine['remarks'] ?? 'N/A').'"
                     data-last_period_dates='.(json_encode($last_period_list) ?? 'N/A').'
+                    data-estimated_next_period="'.(date('F j, Y', strtotime($estimated_next_period))).'"
                     data-toggle="modal" data-target="#viewFeminineModal">
                         <i class="fa-solid fa-magnifying-glass"></i> View
                 </button>
@@ -110,13 +117,17 @@ class BarangayHealthWorkerController extends Controller
 
                 <button type="button" class="btn btn-sm btn-warning text-white delete_record" data-id="'.$feminine['id'].'"><i class="fa-solid fa-user-xmark"></i> Unassigned</button>
             ';
+
+            $feminine_arr[$feminine_key]['estimated_next_period'] = date('F j, Y', strtotime($estimated_next_period));
+            $feminine_arr[$feminine_key]['estimated_menstrual_status'] = $estimated_next_period < date('Y-m-d') ? '<span class="text-danger"><strong>&bull;</strong> Delay</span>' : '<span class="text-success"><strong>&bull;</strong> On Time</span>';
         }
 
         return response()->json(['data'=>$feminine_arr, "recordsFiltered"=>count($feminine_arr), 'recordsTotal'=>count($feminine_arr)]);
     }
 
     public function calendarIndex() {
-        return view('health_worker/calendar/index');
+        $new_period_notification = $this->newMenstrualPeriodNotificationForHealthWorker();
+        return view('health_worker/calendar/index', compact('new_period_notification'));
     }
 
     public function calendarData() {
@@ -176,8 +187,9 @@ class BarangayHealthWorkerController extends Controller
         }
 
         try {
+            $new_period_notification = $this->newMenstrualPeriodNotificationForHealthWorker();
             $user = User::findOrFail(Auth::user()->id);
-            return view('health_worker/profile/index', compact('user'));
+            return view('health_worker/profile/index', compact('user', 'new_period_notification'));
         }
         catch(ModelNotFoundException $e) {
             Session::flash('auth-error', 'Please login to continue.');
@@ -290,5 +302,40 @@ class BarangayHealthWorkerController extends Controller
                     'full_name' => $item->feminine->full_name(),
                 ];
             });
+    }
+
+    private function estimatedNextPeriod($last_period_date, $birthdate) {
+        $last_period = Carbon::parse($last_period_date);
+        $birthday = Carbon::parse($birthdate);
+
+        $age = $last_period->diffInYears($birthday);
+
+        // Set the average menstrual cycle length based on the age
+        $average_cycle_length = $this->getAverageCycleLengthByAge($age);
+
+        // Estimate the next period by adding the average menstrual cycle length
+        $nextPeriod = $last_period->copy()->addDays($average_cycle_length);
+
+        return $nextPeriod->toDateString();
+    }
+
+    private function getAverageCycleLengthByAge($age) {
+
+        // average cycle lengths for different age ranges
+        $average_cycle_lengths = [
+            ['ageRange' => [12, 17], 'cycleLength' => 28],
+            ['ageRange' => [18, 24], 'cycleLength' => 30],
+            ['ageRange' => [25, 35], 'cycleLength' => 32],
+            ['ageRange' => [36, 45], 'cycleLength' => 34],
+            ['ageRange' => [46, PHP_INT_MAX], 'cycleLength' => 35],
+        ];
+
+        foreach ($average_cycle_lengths as $entry) {
+            if ($age >= $entry['ageRange'][0] && $age <= $entry['ageRange'][1]) {
+                return $entry['cycleLength'];
+            }
+        }
+
+        return 28; // default cycle length if age range not found
     }
 }
