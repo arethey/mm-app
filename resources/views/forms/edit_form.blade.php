@@ -5,21 +5,21 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label for="edit_first_name">First Name</label>
-                <input type="text" class="form-control" id="edit_first_name" name="edit_first_name" placeholder="Enter first name">
+                <input type="text" class="form-control" id="edit_first_name" name="edit_first_name" placeholder="Enter first name" oninput="handleInputCapitalize(event)">
             </div>
         </div>
 
         <div class="col-md-4">
             <div class="form-group">
                 <label for="edit_middle_name">Middle Name</label>
-                <input type="text" class="form-control" id="edit_middle_name" name="edit_middle_name" placeholder="Enter middle name (optional)">
+                <input type="text" class="form-control" id="edit_middle_name" name="edit_middle_name" placeholder="Enter middle name (optional)" oninput="handleInputCapitalize(event)">
             </div>
         </div>
 
         <div class="col-md-4">
             <div class="form-group">
                 <label for="edit_last_name">Last Name</label>
-                <input type="text" class="form-control" id="edit_last_name" name="edit_last_name" placeholder="Enter last name">
+                <input type="text" class="form-control" id="edit_last_name" name="edit_last_name" placeholder="Enter last name" oninput="handleInputCapitalize(event)">
             </div>
         </div>
     </div>

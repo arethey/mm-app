@@ -99,6 +99,18 @@
     <script src="{{ asset('assets/izitoast/iziToast.min.js') }}"></script>
     <script src="{{ asset('assets/template/vendors/sweetalert2/sweetalert2.min.js') }}"></script>
 
+    <script>
+        function handleInputCapitalize(e) {
+            let inputValue = e.target.value;
+            let words = inputValue.split(" ");
+            for (let i = 0; i < words.length; i++) {
+                words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
+            }
+            inputValue = words.join(" ");
+            e.target.value = inputValue;
+        }
+    </script>
+
     @yield('scripts')
 </body>
 </html>

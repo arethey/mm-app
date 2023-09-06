@@ -46,7 +46,7 @@
                                             <div class="row">
                                                 <div class="col-lg-4 col-sm-12 mb-3">
                                                     <label for="first_name" class="form-label">First Name</label>
-                                                    <input type="text" id="first_name" name="first_name" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" value="{{ old('email') }}" placeholder="Enter your first nama" autofocus>
+                                                    <input type="text" id="first_name" name="first_name" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" value="{{ old('email') }}" placeholder="Enter your first name" autofocus oninput="handleInputCapitalize(event)">
             
                                                     @if ($errors->has('first_name'))
                                                         <span class="invalid-feedback">
@@ -57,12 +57,12 @@
             
                                                 <div class="col-lg-4 col-sm-12 mb-3">
                                                     <label for="middle_name" class="form-label">Middle Name</label>
-                                                    <input type="text" id="middle_name" name="middle_name" class="form-control {{ $errors->has('middle_name') ? 'is-invalid' : '' }}" value="{{ old('middle_name') }}" placeholder="Enter your middle name">
+                                                    <input type="text" id="middle_name" name="middle_name" class="form-control {{ $errors->has('middle_name') ? 'is-invalid' : '' }}" value="{{ old('middle_name') }}" placeholder="Enter your middle name" oninput="handleInputCapitalize(event)">
                                                 </div>
             
                                                 <div class="col-lg-4 col-sm-12 mb-3">
                                                     <label for="last_name" class="form-label">Last Name</label>
-                                                    <input type="text" id="last_name" name="last_name" class="form-control {{ $errors->has('last_name') ? 'is-invalid' : '' }}" value="{{ old('last_name') }}" placeholder="Enter your last name">
+                                                    <input type="text" id="last_name" name="last_name" class="form-control {{ $errors->has('last_name') ? 'is-invalid' : '' }}" value="{{ old('last_name') }}" placeholder="Enter your last name" oninput="handleInputCapitalize(event)">
             
                                                     @if ($errors->has('last_name'))
                                                         <span class="invalid-feedback">
@@ -182,5 +182,17 @@
 
     <script src="{{ asset('assets/template/vendors/jquery-validation/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('assets/auth/js/sign_up_validation.js') }}"></script>
+
+    <script>
+        function handleInputCapitalize(e) {
+            let inputValue = e.target.value;
+            let words = inputValue.split(" ");
+            for (let i = 0; i < words.length; i++) {
+                words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
+            }
+            inputValue = words.join(" ");
+            e.target.value = inputValue;
+        }
+    </script>
 </body>
 </html>

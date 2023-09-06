@@ -29,7 +29,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-baseline mb-4 mb-md-3">
-                        <h6 class="card-title mb-0">Feminine Account List</h6>
+                        <h6 class="card-title mb-0">Account List</h6>
                     </div>
                     <div class="table-responsive">
                         <table id="feminine_account_table" class="table">

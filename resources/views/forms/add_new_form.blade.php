@@ -3,19 +3,19 @@
         <div class="col-lg-4 col-sm-12">
             <div class="form-group">
                 <label for="first_name">First Name</label>
-                <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Enter first name">
+                <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Enter first name" oninput="handleInputCapitalize(event)">
             </div>
         </div>
         <div class="col-lg-4 col-sm-12">
             <div class="form-group">
                 <label for="middle_name">Middle Name</label>
-                <input type="text" class="form-control" id="middle_name" name="middle_name" placeholder="Enter middle name (optional)">
+                <input type="text" class="form-control" id="middle_name" name="middle_name" placeholder="Enter middle name (optional)" oninput="handleInputCapitalize(event)">
             </div>
         </div>
         <div class="col-lg-4 col-sm-12">
             <div class="form-group">
                 <label for="last_name">Last Name</label>
-                <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Enter last name">
+                <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Enter last name" oninput="handleInputCapitalize(event)">
             </div>
         </div>
     </div>
