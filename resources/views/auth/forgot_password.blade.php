@@ -61,7 +61,7 @@
                 e.preventDefault();
                 return;
             }
-            $(this).addClass('form-submitted').find('button[type=submit]').attr('disabled', true).html('Please wait a moments...');
+            $(this).addClass('form-submitted').find('button[type=submit]').attr('disabled', true).html('Please wait a moment...');
         });
     </script>
 
