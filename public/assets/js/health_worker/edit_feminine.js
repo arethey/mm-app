@@ -18,6 +18,7 @@ $(function () {
                     address: form.find('#edit_address').val(),
                     middle_name: form.find('#edit_middle_name').val(),
                     email: form.find('#edit_email_address').val(),
+                    contact_no: form.find('#edit_contact_no').val(),
                     birthdate: form.find('#edit_birthdate').val(),
                     menstruation_status: form.find('#edit_menstruation_status').val(),
                     last_period_date: form.find('#edit_last_period_date').val(),
@@ -83,6 +84,12 @@ $(function () {
             birthdate: {
                 required: true,
                 date: true
+            },
+            contact_no: {
+                required: false,
+                digits: true,
+                minlength: 10,
+                maxlength: 11
             }
         },
         messages: {
@@ -104,6 +111,11 @@ $(function () {
             birthdate: {
                 required: "Please select the birthdate of the user",
                 date: "Please enter a valid date"
+            },
+            contact_no: {
+                digits: "Please enter a valid contact number",
+                minlength: "Must be at least 10 digits",
+                maxlength: "Must not exceed 11 digits"
             }
         },
         errorPlacement: function (label, element) {
@@ -113,6 +125,10 @@ $(function () {
         highlight: function (element, errorClass) {
             $(element).parent().addClass('has-danger')
             $(element).addClass('form-control-danger')
+        },
+        unhighlight: function (element, errorClass) {
+            $(element).parent().removeClass('has-danger');
+            $(element).removeClass('form-control-danger');
         }
     });
 })

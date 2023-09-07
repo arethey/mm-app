@@ -153,7 +153,7 @@ class AdminController extends Controller {
         $feminine_arr = User::with('last_periods')
             ->where('user_role_id', 2)
             ->orderBy('last_name', 'ASC')
-            ->get(['id', 'first_name', 'last_name', 'middle_name', 'address', 'email', 'birthdate', 'menstruation_status', 'is_active', 'remarks'])
+            ->get(['id', 'first_name', 'last_name', 'middle_name', 'address', 'email', 'contact_no', 'birthdate', 'menstruation_status', 'is_active', 'remarks'])
             ->toArray();
 
         $row_count = 0;
@@ -199,6 +199,7 @@ class AdminController extends Controller {
                     data-menstruation_status="'.$feminine['menstruation_status'].'"
                     data-is_active="'.$feminine['is_active'].'"
                     data-remarks="'.($feminine['remarks'] ?? 'N/A').'"
+                    data-contact_no="'.($feminine['contact_no'] ?? 'N/A').'"
                     data-last_period_dates='.(json_encode(array_slice($feminine['last_periods'], 0, 3)) ?? 'N/A').'
                     data-assign_bhw="'. ($assign_status->count() != 0 ? $assign_health_worker_arr : null) .'"
                     data-toggle="modal" data-target="#viewFeminineModal">
@@ -212,6 +213,7 @@ class AdminController extends Controller {
                     data-middle_name="'.$feminine['middle_name'].'"
                     data-email="'.$feminine['email'].'"
                     data-address="'.$feminine['address'].'"
+                    data-contact_no="'.$feminine['contact_no'].'"
                     data-birthdate="'. ($feminine['birthdate'] ? date('m/d/Y', strtotime($feminine['birthdate'])) : null) .'"
                     data-menstruation_status="'.$feminine['menstruation_status'].'"
                     data-remarks="'.($feminine['remarks'] ?? null).'"
@@ -365,7 +367,7 @@ class AdminController extends Controller {
     public function healthWorkerData() {
         $health_worker_arr = User::where('user_role_id', 3)
             ->orderBy('last_name', 'ASC')
-            ->get(['id', 'first_name', 'last_name', 'middle_name', 'address', 'email', 'birthdate', 'is_active', 'remarks'])
+            ->get(['id', 'first_name', 'last_name', 'middle_name', 'address', 'email', 'contact_no', 'birthdate', 'is_active', 'remarks'])
             ->toArray();
 
         $row_count = 0;
@@ -390,6 +392,7 @@ class AdminController extends Controller {
                 <button type="button" class="btn btn-sm btn-secondary"
                     data-full_name="'.$full_name.'"
                     data-email="'.$health_worker['email'].'"
+                    data-contact_no="'.($health_worker['contact_no'] ?? 'N/A').'"
                     data-address="'.$health_worker['address'].'"
                     data-birthdate="'. ($health_worker['birthdate'] ? date('F j, Y', strtotime($health_worker['birthdate'])) : 'N/A') .'"
                     data-is_active="'.$health_worker['is_active'].'"
@@ -405,6 +408,7 @@ class AdminController extends Controller {
                     data-last_name="'.$health_worker['last_name'].'"
                     data-middle_name="'.$health_worker['middle_name'].'"
                     data-email="'.$health_worker['email'].'"
+                    data-contact_no="'.$health_worker['contact_no'].'"
                     data-address="'.$health_worker['address'].'"
                     data-birthdate="'. ($health_worker['birthdate'] ? date('m/d/Y', strtotime($health_worker['birthdate'])) : null) .'"
                     data-remarks="'.($health_worker['remarks'] ?? null).'"

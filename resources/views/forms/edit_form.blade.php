@@ -42,10 +42,19 @@
         </div>
     </div>
 
-
-    <div class="form-group">
-        <label for="edit_email_address">Active Email</label>
-        <input type="email" class="form-control" id="edit_email_address" name="edit_email_address" placeholder="Enter an active email ex: juany@sample.com">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="form-group">
+                <label for="edit_email_address">Active Email</label>
+                <input type="email" class="form-control" id="edit_email_address" name="edit_email_address" placeholder="Enter an active email ex: juany@sample.com">
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="form-group">
+                <label for="edit_contact_no">Contact No.</label>
+                <input type="number" class="form-control" id="edit_contact_no" name="edit_contact_no" placeholder="Enter contact no.">
+            </div>
+        </div>
     </div>
     <div class="form-group">
         <label for="edit_menstruation_status">Menstruation Status</label>

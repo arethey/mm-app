@@ -40,7 +40,9 @@ class LoginController extends Controller
     }
 
     public function login(Request $request) {
-        if($this->auth->attempt($request->only('email', 'password'))) {
+        $credentials = $request->only('email', 'password');
+        
+        if ($this->auth->attempt($credentials) || $this->auth->attempt(['contact_no' => $credentials['email'], 'password' => $credentials['password']])) {
             if($this->auth->user()->user_role_id == 1) {
                 return redirect()->route('admin.dashboard');
             }
@@ -54,7 +56,7 @@ class LoginController extends Controller
                 else {
                     $this->logout($request);
 
-                    Session::flash('account-verification-error', 'Your account is not verified by the admin yet. Please comeback later.');
+                    Session::flash('account-verification-error', 'Your account is not verified by the admin yet. Please come back later.');
                     return redirect()->route('login.page');
                 }
             }
@@ -62,7 +64,7 @@ class LoginController extends Controller
         else {
             $this->logout($request);
 
-            Session::flash('login-error', 'Invalid email or password.');
+            Session::flash('login-error', 'Invalid user credential, please try again.');
             return redirect()->route('login.page');
         }
     }

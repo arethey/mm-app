@@ -82,5 +82,9 @@ $("#sign_up_form").validate({
     highlight: function (element, errorClass) {
         $(element).parent().addClass('has-danger')
         $(element).addClass('form-control-danger')
+    },
+    unhighlight: function (element, errorClass) {
+        $(element).parent().removeClass('has-danger');
+        $(element).removeClass('form-control-danger');
     }
 });

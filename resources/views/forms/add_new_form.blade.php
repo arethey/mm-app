@@ -38,9 +38,19 @@
         </div>
     </div>
 
-    <div class="form-group">
-        <label for="email_address">Active Email</label>
-        <input type="email" class="form-control" id="email_address" name="email_address" placeholder="Enter an active email ex: juany@sample.com">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="form-group">
+                <label for="email_address">Active Email</label>
+                <input type="email" class="form-control" id="email_address" name="email_address" placeholder="Enter an active email ex: juany@sample.com">
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="form-group">
+                <label for="contact_no">Contact No.</label>
+                <input type="number" class="form-control" id="contact_no" name="contact_no" placeholder="Enter contact no.">
+            </div>
+        </div>
     </div>
     <div class="form-group">
         <label for="menstruation_status">Menstruation Status</label>

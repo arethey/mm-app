@@ -44,6 +44,7 @@ $(document).ready(function () {
         var modal = $(this);
         modal.find(".modal-body #view_name").text(button.data("full_name"));
         modal.find(".modal-body #view_email").text(button.data("email"));
+        modal.find(".modal-body #view_contact_no").text(button.data("contact_no"));
         modal
             .find(".modal-body #view_birthdate")
             .text(button.data("birthdate"));
@@ -189,6 +190,9 @@ $(document).ready(function () {
             modal
                 .find(".modal-body #edit_email_address")
                 .val(button.data("email"));
+            modal
+                .find(".modal-body #edit_contact_no")
+                .val(button.data("contact_no"));
             modal.find(".modal-body #edit_remarks").val(button.data("remarks"));
             modal
                 .find(".modal-body #edit_menstruation_status option")

@@ -58,6 +58,9 @@ class RegisterController extends Controller
             'password' => ['required', 'string', 'min:6', 'confirmed'],
             'menstruation_status' => ['required', 'boolean'],
             'birthdate' => ['required', 'date', 'before:today'],
+            'contact_no' => ['numeric', 'nullable', 'regex:/^\d{10,11}$/'],
+        ], [
+            'contact_no.regex' => 'The contact number must be 10 or 11 digits.'
         ]);
     }
 
@@ -74,6 +77,7 @@ class RegisterController extends Controller
                 'last_name' => $data['last_name'],
                 'middle_name' => $data['middle_name'] ?? null,
                 'email' => $data['email'],
+                'contact_no' => $data['contact_no'],
                 'address' => $data['address'] ?? null,
                 'birthdate' => date('Y-m-d', strtotime($data['birthdate'])),
                 'password' => Hash::make($data['password']),

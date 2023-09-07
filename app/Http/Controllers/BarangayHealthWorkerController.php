@@ -61,7 +61,7 @@ class BarangayHealthWorkerController extends Controller
             ->where('feminine_health_worker_groups.health_worker_id', Auth::user()->id)
             ->where('users.user_role_id', 2)
             ->orderBy('users.last_name', 'ASC')
-            ->get(['users.id', 'users.first_name', 'users.last_name', 'users.middle_name', 'users.address', 'users.email', 'users.birthdate', 'users.menstruation_status', 'users.is_active', 'users.remarks'])
+            ->get(['users.id', 'users.first_name', 'users.last_name', 'users.middle_name', 'users.address', 'users.email', 'users.contact_no', 'users.birthdate', 'users.menstruation_status', 'users.is_active', 'users.remarks'])
             ->toArray();
 
         $row_count = 0;
@@ -88,6 +88,7 @@ class BarangayHealthWorkerController extends Controller
                 <button type="button" class="btn btn-sm btn-secondary" id="period_notif_'. $feminine['id'] .'"
                     data-full_name="'.$full_name.'"
                     data-email="'.$feminine['email'].'"
+                    data-contact_no="'.$feminine['contact_no'].'"
                     data-address="'.$feminine['address'].'"
                     data-birthdate="'. ($feminine['birthdate'] ? date('F j, Y', strtotime($feminine['birthdate'])) : 'N/A') .'"
                     data-menstruation_status="'.$feminine['menstruation_status'].'"
@@ -105,6 +106,7 @@ class BarangayHealthWorkerController extends Controller
                     data-last_name="'.$feminine['last_name'].'"
                     data-middle_name="'.$feminine['middle_name'].'"
                     data-email="'.$feminine['email'].'"
+                    data-contact_no="'.$feminine['contact_no'].'"
                     data-address="'.$feminine['address'].'"
                     data-birthdate="'. ($feminine['birthdate'] ? date('m/d/Y', strtotime($feminine['birthdate'])) : null) .'"
                     data-menstruation_status="'.$feminine['menstruation_status'].'"

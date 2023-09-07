@@ -78,6 +78,32 @@ $(document).ready(function () {
                 required: true,
                 date: true,
             },
+            contact_no: {
+                required: false,
+                digits: true,
+                minlength: 10,
+                maxlength: 11
+            },
+            edit_first_name: {
+                required: true,
+            },
+            edit_last_name: {
+                required: true,
+            },
+            edit_email_address: {
+                required: true,
+                email: true,
+            },
+            edit_contact_no: {
+                required: false,
+                digits: true,
+                minlength: 10,
+                maxlength: 11
+            },
+            edit_birthdate: {
+                required: true,
+                date: true,
+            },
         },
         messages: {
             first_name: {
@@ -90,7 +116,24 @@ $(document).ready(function () {
                 required: "Please enter the active email of the user",
             },
             birthdate: {
-                required: "Please select the birthdate of the user",
+                required: "birthdate is required",
+                date: "Please enter a valid date",
+            },
+            contact_no: {
+                digits: "Please enter a valid contact number",
+                minlength: "Must be at least 10 digits",
+                maxlength: "Must not exceed 11 digits"
+            }, 
+            edit_contact_no: {
+                digits: "Please enter a valid contact number",
+                minlength: "Must be at least 10 digits",
+                maxlength: "Must not exceed 11 digits"
+            },
+            edit_email_address: {
+                required: "Please enter the active email of the user",
+            },
+            edit_birthdate: {
+                required: "birthdate is required",
                 date: "Please enter a valid date",
             },
         },
@@ -102,6 +145,10 @@ $(document).ready(function () {
             $(element).parent().addClass("has-danger");
             $(element).addClass("form-control-danger");
         },
+        unhighlight: function (element, errorClass) {
+            $(element).parent().removeClass('has-danger');
+            $(element).removeClass('form-control-danger');
+        }
     };
 
     $.validator.setDefaults({
@@ -150,6 +197,9 @@ $(document).ready(function () {
             modal
                 .find(".modal-body #edit_email_address")
                 .val(button.data("email"));
+            modal
+                .find(".modal-body #edit_contact_no")
+                .val(button.data("contact_no"));
             modal.find(".modal-body #edit_remarks").val(button.data("remarks"));
         }
     });
@@ -164,6 +214,7 @@ $(document).ready(function () {
             .find(".modal-body #view_birthdate")
             .text(button.data("birthdate"));
         modal.find(".modal-body #view_address").text(button.data("address"));
+        modal.find(".modal-body #view_contact_no").text(button.data("contact_no"));
 
         modal
             .find(".modal-body #view_is_active")
@@ -410,8 +461,9 @@ $(document).ready(function () {
                 address: $(form)[0][4].value,
                 birthdate: $(form)[0][5].value,
                 email: $(form)[0][6].value,
-                remarks: $(form)[0][7].value,
-                id: $(form)[0][8].value ? $(form)[0][8].value : null,
+                contact_no: $(form)[0][7].value,
+                remarks: $(form)[0][8].value,
+                id: $(form)[0][9].value ? $(form)[0][9].value : null,
             },
             success: function (data) {
                 if (data) {

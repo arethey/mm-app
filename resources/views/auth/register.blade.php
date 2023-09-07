@@ -100,20 +100,33 @@
                                                 </div>
                                             </div>
 
-                                            <div class="mb-3">
-                                                <label for="email" class="form-label">Email</label>
-                                                <input type="text" id="email" name="email" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" value="{{ old('email') }}" placeholder="Enter email ex: juany@sample.com">
+                                            <div class="row">
+                                                <div class="col-lg-8 col-sm-12 mb-3">
+                                                    <label for="email" class="form-label">Email</label>
+                                                    <input type="text" id="email" name="email" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" value="{{ old('email') }}" placeholder="Enter email ex: juany@sample.com">
+    
+                                                    @if ($errors->has('email'))
+                                                        <span class="invalid-feedback">
+                                                            <strong>{{ $errors->first('email') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
 
-                                                @if ($errors->has('email'))
+                                                <div class="col-lg-4 col-sm-12 mb-3">
+                                                    <label for="contact_no" class="form-label">Contact No.</label>
+                                                    <input type="number" id="contact_no" name="contact_no" class="form-control {{ $errors->has('contact_no') ? 'is-invalid' : '' }}" value="{{ old('contact_no') }}" placeholder="Enter active contact no." oninput="handleInputCapitalize(event)">
+
+                                                    @if ($errors->has('contact_no'))
                                                     <span class="invalid-feedback">
-                                                        <strong>{{ $errors->first('email') }}</strong>
+                                                        <strong>{{ $errors->first('contact_no') }}</strong>
                                                     </span>
                                                 @endif
+                                                </div>
                                             </div>
 
                                             <div class="mb-4">
                                                 <label for="password" class="form-label">Password</label>
-                                                <input type="password" id="password" name="password" class="form-control  {{ $errors->has('password') ? 'is-invalid' : '' }}" placeholder="*******" required>
+                                                <input type="password" id="password" name="password" class="form-control  {{ $errors->has('password') ? 'is-invalid' : '' }}" placeholder="•••••••" required>
 
                                                 @if ($errors->has('password'))
                                                     <span class="invalid-feedback">
@@ -124,7 +137,7 @@
 
                                             <div class="mb-4">
                                                 <label for="password_confirmation" class="form-label">Confirm Password</label>
-                                                <input type="password" id="password_confirmation" name="password_confirmation" class="form-control  {{ $errors->has('password_confirmation') ? 'is-invalid' : '' }}" placeholder="*******" required>
+                                                <input type="password" id="password_confirmation" name="password_confirmation" class="form-control  {{ $errors->has('password_confirmation') ? 'is-invalid' : '' }}" placeholder="•••••••" required>
 
                                                 @if ($errors->has('password_confirmation'))
                                                     <span class="invalid-feedback">

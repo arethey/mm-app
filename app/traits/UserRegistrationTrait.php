@@ -20,7 +20,10 @@ trait UserRegistrationTrait {
                 'email' => 'required|email|max:100',
                 'menstruation_status' => 'required|boolean',
                 'last_period_date' => 'required|date',
-                'birthdate' => 'required|date|before:today'
+                'birthdate' => 'required|date|before:today',
+                'contact_no' => ['numeric', 'nullable', 'regex:/^\d{10,11}$/'],
+            ],[
+                'contact_no.regex' => 'The contact number must be 10 or 11 digits.'
             ]);
 
             if($check_validation->fails()) return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
@@ -35,6 +38,7 @@ trait UserRegistrationTrait {
                 'last_name' => $form_data['last_name'],
                 'address' => $form_data['address'] ?? null,
                 'email' => $form_data['email'] ?? null,
+                'contact_no' => $form_data['contact_no'] ?? null,
                 'birthdate' => date('Y-m-d', strtotime($form_data['birthdate'])),
                 'menstruation_status' => $form_data['menstruation_status'] ?? null,
                 'user_role_id' => 2, // 2 = user feminine and default role
@@ -85,7 +89,10 @@ trait UserRegistrationTrait {
                 'first_name' => 'required|max:100',
                 'last_name' => 'required|max:100',
                 'email' => 'required|email|max:100',
-                'birthdate' => 'required|date|before:today'
+                'birthdate' => 'required|date|before:today',
+                'contact_no' => ['numeric', 'nullable', 'regex:/^\d{10,11}$/'],
+            ],[
+                'contact_no.regex' => 'The contact number must be 10 or 11 digits.'
             ]);
 
             if($check_validation->fails()) return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
@@ -100,6 +107,7 @@ trait UserRegistrationTrait {
                 'last_name' => $form_data['last_name'],
                 'address' => $form_data['address'] ?? null,
                 'email' => $form_data['email'],
+                'contact_no' => $form_data['contact_no'],
                 'birthdate' => date('Y-m-d', strtotime($form_data['birthdate'])),
                 'menstruation_status' => 2, // 2 = not applicable
                 'user_role_id' => 3, // 3 = barangay health worker and default role

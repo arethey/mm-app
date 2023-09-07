@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BarangayHealthWorkerController;
+use App\Http\Controllers\ForgotPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +20,11 @@ use App\Http\Controllers\BarangayHealthWorkerController;
 
 Auth::routes();
 Route::view('/', 'auth/login')->name('login.page');
+
+Route::get('forgot-password', [ForgotPasswordController::class, 'index']);
+Route::post('forgot-password', [ForgotPasswordController::class, 'postForgotPassword']);
+Route::get('reset-password/{token}', [ForgotPasswordController::class, 'getResetPassword']);
+Route::post('reset-password', [ForgotPasswordController::class, 'postResetPassword']);
 
 Route::group(['middleware' => 'auth'], function () {
     // Admin Routes
@@ -92,4 +98,3 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('health-worker/pie-chart-data', [BarangayHealthWorkerController::class, 'pieChartData']);
     });
 });
-

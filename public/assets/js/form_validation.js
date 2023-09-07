@@ -39,6 +39,7 @@ $.validator.setDefaults({
                 middle_name: form.find('#middle_name').val(),
                 address: form.find('#address').val(),
                 email: form.find('#email_address').val(),
+                contact_no: form.find('#contact_no').val(),
                 birthdate: form.find('#birthdate').val(),
                 menstruation_status: form.find('#menstruation_status').val(),
                 last_period_date: form.find('#last_period_date').val(),
@@ -111,6 +112,12 @@ $("#newFeminineForm").validate({
         birthdate: {
             required: true,
             date: true
+        },
+        contact_no: {
+            required: false,
+            digits: true,
+            minlength: 10,
+            maxlength: 11
         }
     },
     messages: {
@@ -129,6 +136,11 @@ $("#newFeminineForm").validate({
         birthdate: {
             required: "Please select the birthdate of the user",
             date: "Please enter a valid date",
+        },
+        contact_no: {
+            digits: "Please enter a valid contact number",
+            minlength: "Must be at least 10 digits",
+            maxlength: "Must not exceed 11 digits"
         }
     },
     errorPlacement: function (label, element) {
@@ -138,6 +150,10 @@ $("#newFeminineForm").validate({
     highlight: function (element, errorClass) {
         $(element).parent().addClass('has-danger')
         $(element).addClass('form-control-danger')
+    },
+    unhighlight: function (element, errorClass) {
+        $(element).parent().removeClass('has-danger');
+        $(element).removeClass('form-control-danger');
     }
 });
 
@@ -148,6 +164,16 @@ $('#newFeminineModal').on('shown.bs.modal', function () {
 });
 
 $('#newFeminineModal').on('hidden.bs.modal', function () {
-    $('#newFeminineForm').trigger('reset');
+
+    const form = $(this).find('#newFeminineForm');
+    form.trigger('reset')
+        .find('.form-control')
+        .removeClass('form-control-danger valid')
+        .removeAttr('aria-invalid')
+        .end()
+        .find('.form-group')
+        .removeClass('has-danger');
+    form.validate().resetForm();
+
     $('#last_period_datepicker').datepicker('setDate', today);
 });

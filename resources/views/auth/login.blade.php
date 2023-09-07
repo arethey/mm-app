@@ -35,40 +35,43 @@
                                             <a href="{{ URL::to('user/dashboard') }}" class="btn btn-primary w-100 py-2 fs-4 rounded-1">Return to Dashboard</a>
                                         @endif
                                     @else
-                                    <p class="text-center mb-4">Sign in to your account to proceed</p>
-                                    <form method="POST" action="{{ route('login') }}" autocomplete="off">
-                                        @csrf
-                                        <div class="mb-3">
-                                            <label for="email" class="form-label">Email</label>
-                                            <input type="text" id="email" name="email" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" value="{{ old('email') }}" placeholder="Enter email ex: juany@sample.com" required autofocus>
+                                        <p class="text-center mb-4">Sign in to your account to proceed</p>
+                                        <form method="POST" action="{{ route('login') }}" autocomplete="off">
+                                            @csrf
+                                            <div class="mb-3">
+                                                <label for="email" class="form-label">Email</label>
+                                                <input type="text" id="email" name="email" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" value="{{ old('email') }}" placeholder="Enter email ex: juany@sample.com" required autofocus>
 
-                                            @if ($errors->has('email'))
-                                                <span class="invalid-feedback">
-                                                    <strong>{{ $errors->first('email') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                        <div class="mb-4">
-                                            <label for="password" class="form-label">Password</label>
-                                            <input type="password" id="password" name="password" class="form-control  {{ $errors->has('password') ? 'is-invalid' : '' }}" placeholder="*******" required>
-
-                                            @if ($errors->has('password'))
-                                                <span class="invalid-feedback">
-                                                    <strong>{{ $errors->first('password') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
-                                        <div class="d-flex align-items-center justify-content-between mb-4">
-                                            <div class="form-check">
-                                                <input class="form-check-input primary" type="checkbox" id="remember" name="remember" {{ old('remember') ? 'checked' : '' }}>
-                                                <label class="form-check-label text-dark" for="remember">Remeber</label>
+                                                @if ($errors->has('email'))
+                                                    <span class="invalid-feedback">
+                                                        <strong>{{ $errors->first('email') }}</strong>
+                                                    </span>
+                                                @endif
                                             </div>
-                                            @if(Route::has('register'))
-                                                <a class="text-primary fw-bold" href="{{ route('register') }}">Register an Account</a>
-                                            @endif
-                                        </div>
-                                        <button type="submit" class="btn btn-primary w-100 py-2 fs-4 rounded-1">Sign In</button>
-                                    </form>
+                                            <div class="mb-4">
+                                                <label for="password" class="form-label">Password</label>
+                                                <input type="password" id="password" name="password" class="form-control  {{ $errors->has('password') ? 'is-invalid' : '' }}" placeholder="•••••••" required>
+
+                                                @if ($errors->has('password'))
+                                                    <span class="invalid-feedback">
+                                                        <strong>{{ $errors->first('password') }}</strong>
+                                                    </span>
+                                                @endif
+                                            </div>
+                                            <div class="d-flex align-items-center justify-content-between mb-4">
+                                                <div class="form-check">
+                                                    <input class="form-check-input primary" type="checkbox" id="remember" name="remember" {{ old('remember') ? 'checked' : '' }}>
+                                                    <label class="form-check-label text-dark" for="remember">Remeber me</label>
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary w-100 py-2 fs-4 rounded-1">Sign In</button>
+                                            <div class="d-flex align-items-center justify-content-between mt-3">
+                                                @if(Route::has('register'))
+                                                    <a class="text-primary fw-bold" href="{{ route('register') }}">Register an Account</a>
+                                                @endif
+                                                <a class="text-primary fw-bold" href="{{ URL::to('forgot-password') }}">Forgot Password</a>
+                                            </div>
+                                        </form>
                                     @endauth
                                 @endif
                             </div>
