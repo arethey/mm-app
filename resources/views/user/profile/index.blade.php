@@ -69,10 +69,16 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col">
+                                        <div class="col-lg-8 col-ms-12">
                                             <div class="form-group">
                                                 <label for="email">Email</label>
                                                 <input class="form-control" type="email" id="email" name="email" placeholder="Enter your current or active email address" value="{{ $user->email }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-ms-12">
+                                            <div class="form-group">
+                                                <label for="contact_no">Contact No.</label>
+                                                <input class="form-control" type="number" id="contact_no" name="contact_no" placeholder="Enter your contact no." value="{{ $user->contact_no }}">
                                             </div>
                                         </div>
                                     </div>

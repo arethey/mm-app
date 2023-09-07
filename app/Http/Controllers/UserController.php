@@ -168,7 +168,10 @@ class UserController extends Controller {
                 'last_name' => 'required|max:100',
                 'email' => 'required|email|max:100',
                 'menstruation_status' => 'required|boolean',
-                'birthdate' => 'required|date|before:today'
+                'birthdate' => 'required|date|before:today',
+                'contact_no' => ['numeric', 'nullable', 'regex:/^\d{10,11}$/'],
+            ],[
+                'contact_no.regex' => 'The contact number must be 10 or 11 digits.'
             ]);
 
             if($check_validation->fails()) return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
@@ -183,6 +186,7 @@ class UserController extends Controller {
                 'middle_name' => $request->middle_name ?? null,
                 'last_name' => $request->last_name,
                 'email' => $request->email ?? null,
+                'contact_no' => $request->contact_no ?? null,
                 'address' => $request->address ?? null,
                 'birthdate' => date('Y-m-d', strtotime($request->birthdate)),
                 'menstruation_status' => $request->menstruation_status ?? null,

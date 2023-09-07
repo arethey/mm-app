@@ -26,6 +26,7 @@ $.validator.setDefaults({
                 last_name: form.find('#last_name').val(),
                 middle_name: form.find('#middle_name').val(),
                 email: form.find('#email').val(),
+                contact_no: form.find('#contact_no').val(),
                 address: form.find('#address').val(),
                 birthdate: form.find('#birthdate').val(),
                 menstruation_status: form.find('#menstruation_status').val(),
@@ -80,6 +81,12 @@ $("#profile_form").validate({
         birthdate: {
             required: true,
             date: true
+        },
+        contact_no: {
+            required: false,
+            digits: true,
+            minlength: 10,
+            maxlength: 11
         }
     },
     messages: {
@@ -98,6 +105,11 @@ $("#profile_form").validate({
         birthdate: {
             required: "Please select the birthdate of the user",
             date: "Please enter a valid date"
+        },
+        contact_no: {
+            digits: "Please enter a valid contact number",
+            minlength: "Must be at least 10 digits",
+            maxlength: "Must not exceed 11 digits"
         }
     },
     errorPlacement: function (label, element) {
