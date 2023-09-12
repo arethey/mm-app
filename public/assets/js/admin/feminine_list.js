@@ -102,7 +102,9 @@ $(function () {
 
         modal.find(".modal-body #view_name").text(button.data("full_name"));
         modal.find(".modal-body #view_email").text(button.data("email"));
-        modal.find(".modal-body #view_contact_no").text(button.data("contact_no"));
+        modal
+            .find(".modal-body #view_contact_no")
+            .text(`+63${button.data("contact_no")}`);
         modal
             .find(".modal-body #view_birthdate")
             .text(button.data("birthdate"));
@@ -405,16 +407,15 @@ $(function () {
         }
     });
 
-    $("#editFeminineModal").on("hidden.bs.modal", function(e) {
-
-        const form = $(this).find('#editFeminineForm');
-        form.trigger('reset')
-            .find('.form-control')
-            .removeClass('form-control-danger valid')
-            .removeAttr('aria-invalid')
+    $("#editFeminineModal").on("hidden.bs.modal", function (e) {
+        const form = $(this).find("#editFeminineForm");
+        form.trigger("reset")
+            .find(".form-control")
+            .removeClass("form-control-danger valid")
+            .removeAttr("aria-invalid")
             .end()
-            .find('.form-group')
-            .removeClass('has-danger');
+            .find(".form-group")
+            .removeClass("has-danger");
         form.validate().resetForm();
     });
 

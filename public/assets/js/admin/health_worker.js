@@ -1,3 +1,5 @@
+var date = new Date();
+var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 $(function () {
     $("#hw_table").DataTable({
         aLengthMenu: [
@@ -82,7 +84,7 @@ $(document).ready(function () {
                 required: false,
                 digits: true,
                 minlength: 10,
-                maxlength: 11
+                maxlength: 11,
             },
             edit_first_name: {
                 required: true,
@@ -98,7 +100,7 @@ $(document).ready(function () {
                 required: false,
                 digits: true,
                 minlength: 10,
-                maxlength: 11
+                maxlength: 11,
             },
             edit_birthdate: {
                 required: true,
@@ -122,12 +124,12 @@ $(document).ready(function () {
             contact_no: {
                 digits: "Please enter a valid contact number",
                 minlength: "Must be at least 10 digits",
-                maxlength: "Must not exceed 11 digits"
-            }, 
+                maxlength: "Must not exceed 11 digits",
+            },
             edit_contact_no: {
                 digits: "Please enter a valid contact number",
                 minlength: "Must be at least 10 digits",
-                maxlength: "Must not exceed 11 digits"
+                maxlength: "Must not exceed 11 digits",
             },
             edit_email_address: {
                 required: "Please enter the active email of the user",
@@ -146,9 +148,9 @@ $(document).ready(function () {
             $(element).addClass("form-control-danger");
         },
         unhighlight: function (element, errorClass) {
-            $(element).parent().removeClass('has-danger');
-            $(element).removeClass('form-control-danger');
-        }
+            $(element).parent().removeClass("has-danger");
+            $(element).removeClass("form-control-danger");
+        },
     };
 
     $.validator.setDefaults({
@@ -214,7 +216,9 @@ $(document).ready(function () {
             .find(".modal-body #view_birthdate")
             .text(button.data("birthdate"));
         modal.find(".modal-body #view_address").text(button.data("address"));
-        modal.find(".modal-body #view_contact_no").text(button.data("contact_no"));
+        modal
+            .find(".modal-body #view_contact_no")
+            .text(`+63${button.data("contact_no")}`);
 
         modal
             .find(".modal-body #view_is_active")

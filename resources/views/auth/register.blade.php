@@ -46,7 +46,7 @@
                                             <div class="row">
                                                 <div class="col-lg-4 col-sm-12 mb-3">
                                                     <label for="first_name" class="form-label">First Name</label>
-                                                    <input type="text" id="first_name" name="first_name" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" value="{{ old('email') }}" placeholder="Enter your first name" autofocus oninput="handleInputCapitalize(event)">
+                                                    <input type="text" id="first_name" name="first_name" class="form-control {{ $errors->has('first_name') ? 'is-invalid' : '' }}" value="{{ old('first_name') }}" placeholder="Enter your first name" autofocus oninput="handleInputCapitalize(event)">
             
                                                     @if ($errors->has('first_name'))
                                                         <span class="invalid-feedback">
@@ -75,7 +75,7 @@
                                             <div class="row">
                                                 <div class="col-lg-8 col-sm-12 mb-3">
                                                     <label for="address" class="form-label">Address</label>
-                                                    <input type="text" id="address" name="address" class="form-control {{ $errors->has('address') ? 'is-invalid' : '' }}" value="{{ old('address') }}" placeholder="Enter your address">
+                                                    <input type="text" id="address" name="address" class="form-control {{ $errors->has('address') ? 'is-invalid' : '' }}" value="{{ old('address') }}" placeholder="Enter your address" oninput="handleInputCapitalize(event)">
                                                 </div>
     
                                                 <div class="col-lg-4 col-sm-12 mb-4">
@@ -101,7 +101,7 @@
                                             </div>
 
                                             <div class="row">
-                                                <div class="col-lg-8 col-sm-12 mb-3">
+                                                <div class="col-lg-6 col-sm-12 mb-4">
                                                     <label for="email" class="form-label">Email</label>
                                                     <input type="text" id="email" name="email" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" value="{{ old('email') }}" placeholder="Enter email ex: juany@sample.com">
     
@@ -112,9 +112,12 @@
                                                     @endif
                                                 </div>
 
-                                                <div class="col-lg-4 col-sm-12 mb-3">
+                                                <div class="col-lg-6 col-sm-12 mb-4">
                                                     <label for="contact_no" class="form-label">Contact No.</label>
-                                                    <input type="number" id="contact_no" name="contact_no" class="form-control {{ $errors->has('contact_no') ? 'is-invalid' : '' }}" value="{{ old('contact_no') }}" placeholder="Enter active contact no." oninput="handleInputCapitalize(event)">
+                                                    <div class="input-group">
+                                                        <span class="input-addon px-2 rounded-start-1 border border-end-0 d-flex align-items-center justify-content-center" id="basic-addon1">+63</span>
+                                                        <input type="text" id="contact_no" name="contact_no" class="form-control {{ $errors->has('contact_no') ? 'is-invalid' : '' }}" value="{{ old('contact_no') }}" placeholder="9123456789" oninput="formatPhoneNumber(this)" maxlength="10" pattern="[9]{1}[0-9]{9}">
+                                                    </div>
 
                                                     @if ($errors->has('contact_no'))
                                                     <span class="invalid-feedback">
@@ -205,6 +208,16 @@
             }
             inputValue = words.join(" ");
             e.target.value = inputValue;
+        }
+        function formatPhoneNumber(input) {
+            let phoneNumber = input.value.replace(/\D/g, '');
+            if (phoneNumber.charAt(0) !== '9') {
+                phoneNumber = '9' + phoneNumber.substring(0, 9);
+            }
+            if (phoneNumber.length > 10) {
+                phoneNumber = phoneNumber.substring(0, 10);
+            }
+            input.value = phoneNumber;
         }
     </script>
 </body>

@@ -20,42 +20,46 @@ class BarangayHealthWorkerController extends Controller
 {
     use UserRegistrationTrait;
 
-    public function index() {
+    public function index()
+    {
         $new_period_notification = $this->newMenstrualPeriodNotificationForHealthWorker();
-        
+
         $assign_feminine_count = FeminineHealthWorkerGroup::where('health_worker_id', Auth::user()->id)->count();
         $count = $this->healthWorkerFeminineCount();
 
         return view('health_worker.dashboard', compact('assign_feminine_count', 'count', 'new_period_notification'));
     }
 
-    public function feminineList() {
+    public function feminineList()
+    {
         $new_period_notification = $this->newMenstrualPeriodNotificationForHealthWorker();
         return view('health_worker.feminine.index', compact('new_period_notification'));
     }
 
-    public function postFeminine(Request $request) {
+    public function postFeminine(Request $request)
+    {
         return $this->postForm($request->all());
     }
 
-    public function deleteFeminie(Request $request) {
+    public function deleteFeminie(Request $request)
+    {
         try {
             $user = User::findOrFail($request->id);
 
-            if($user) {
+            if ($user) {
                 $remove_assigned_feminine = FeminineHealthWorkerGroup::where('feminine_id', $user->id)
                     ->where('health_worker_id', Auth::user()->id)
                     ->delete();
             }
 
             return response()->json(['status' => 'success', 'message' => 'Feminine successfully removed.']);
-        }
-        catch(\ModelNotFoundException $e) {
+        } catch (\ModelNotFoundException $e) {
             return response()->json(['status' => 'error', 'message' => 'Something went wrong, please try again.']);
         }
     }
 
-    public function feminineData() {
+    public function feminineData()
+    {
 
         $feminine_arr = FeminineHealthWorkerGroup::join('users', 'users.id', '=', 'feminine_health_worker_groups.feminine_id')
             ->where('feminine_health_worker_groups.health_worker_id', Auth::user()->id)
@@ -65,74 +69,75 @@ class BarangayHealthWorkerController extends Controller
             ->toArray();
 
         $row_count = 0;
-        foreach($feminine_arr as $feminine_key => $feminine) {
-            $full_name = $feminine['last_name'].', '.$feminine['first_name'].' '.$feminine['middle_name'];
+        foreach ($feminine_arr as $feminine_key => $feminine) {
+            $full_name = $feminine['last_name'] . ', ' . $feminine['first_name'] . ' ' . $feminine['middle_name'];
             $last_period_list = MenstruationPeriod::where('user_id', $feminine['id'])->orderBy('menstruation_date', 'DESC')->take(3)->get(['id', 'menstruation_date']);
 
-            if(count($last_period_list) !== 0) {
+            if (count($last_period_list) !== 0) {
                 $estimated_next_period = $this->estimatedNextPeriod($last_period_list->first()->menstruation_date, $feminine['birthdate']);
             }
-            
+
             $feminine_arr[$feminine_key]['row_count'] = ++$row_count;
             $feminine_arr[$feminine_key]['full_name'] = $full_name;
             $feminine_arr[$feminine_key]['menstruation_status'] = '<span class="text-' . ($feminine['menstruation_status'] === 1 ? 'success' : 'danger') . '"><strong>&bull;</strong> ' . ($feminine['menstruation_status'] === 1 ? 'Active' : 'Inactive') . '</span>';
 
-            if($feminine['is_active'] === 1) {
+            if ($feminine['is_active'] === 1) {
                 $feminine_arr[$feminine_key]['is_active'] = '<span class="text-success"><strong>&bull;</strong> Verified</span>';
-            }
-            else {
+            } else {
                 $feminine_arr[$feminine_key]['is_active'] = '<span class="text-warning"><strong>&bull;</strong> Pending</span>';
             }
 
             $feminine_arr[$feminine_key]['action'] = '
-                <button type="button" class="btn btn-sm btn-secondary" id="period_notif_'. $feminine['id'] .'"
-                    data-full_name="'.$full_name.'"
-                    data-email="'.$feminine['email'].'"
-                    data-contact_no="'.$feminine['contact_no'].'"
-                    data-address="'.$feminine['address'].'"
-                    data-birthdate="'. ($feminine['birthdate'] ? date('F j, Y', strtotime($feminine['birthdate'])) : 'N/A') .'"
-                    data-menstruation_status="'.$feminine['menstruation_status'].'"
-                    data-is_active="'.$feminine['is_active'].'"
-                    data-remarks="'.($feminine['remarks'] ?? 'N/A').'"
-                    data-last_period_dates='.(json_encode($last_period_list) ?? 'N/A').'
-                    data-estimated_next_period="'.(date('F j, Y', strtotime($estimated_next_period))).'"
+                <button type="button" class="btn btn-sm btn-secondary" id="period_notif_' . $feminine['id'] . '"
+                    data-full_name="' . $full_name . '"
+                    data-email="' . $feminine['email'] . '"
+                    data-contact_no="' . $feminine['contact_no'] . '"
+                    data-address="' . $feminine['address'] . '"
+                    data-birthdate="' . ($feminine['birthdate'] ? date('F j, Y', strtotime($feminine['birthdate'])) : 'N/A') . '"
+                    data-menstruation_status="' . $feminine['menstruation_status'] . '"
+                    data-is_active="' . $feminine['is_active'] . '"
+                    data-remarks="' . ($feminine['remarks'] ?? 'N/A') . '"
+                    data-last_period_dates=' . (json_encode($last_period_list) ?? 'N/A') . '
+                    data-estimated_next_period="' . (date('F j, Y', strtotime($estimated_next_period))) . '"
                     data-toggle="modal" data-target="#viewFeminineModal">
                         <i class="fa-solid fa-magnifying-glass"></i> View
                 </button>
                 
                 <button type="button" class="btn btn-sm btn-primary"
-                    data-id="'.$feminine['id'].'"
-                    data-first_name="'.$feminine['first_name'].'"
-                    data-last_name="'.$feminine['last_name'].'"
-                    data-middle_name="'.$feminine['middle_name'].'"
-                    data-email="'.$feminine['email'].'"
-                    data-contact_no="'.$feminine['contact_no'].'"
-                    data-address="'.$feminine['address'].'"
-                    data-birthdate="'. ($feminine['birthdate'] ? date('m/d/Y', strtotime($feminine['birthdate'])) : null) .'"
-                    data-menstruation_status="'.$feminine['menstruation_status'].'"
-                    data-remarks="'.($feminine['remarks'] ?? null).'"
-                    data-last_period_date="' . (count($last_period_list) != 0 ? date('m/d/Y', strtotime($last_period_list->first()->menstruation_date)) : null ) . '"
-                    data-menstruation_period_id="'. (count($last_period_list) != 0 ? $last_period_list->first()->id : null) .'"
+                    data-id="' . $feminine['id'] . '"
+                    data-first_name="' . $feminine['first_name'] . '"
+                    data-last_name="' . $feminine['last_name'] . '"
+                    data-middle_name="' . $feminine['middle_name'] . '"
+                    data-email="' . $feminine['email'] . '"
+                    data-contact_no="' . $feminine['contact_no'] . '"
+                    data-address="' . $feminine['address'] . '"
+                    data-birthdate="' . ($feminine['birthdate'] ? date('m/d/Y', strtotime($feminine['birthdate'])) : null) . '"
+                    data-menstruation_status="' . $feminine['menstruation_status'] . '"
+                    data-remarks="' . ($feminine['remarks'] ?? null) . '"
+                    data-last_period_date="' . (count($last_period_list) != 0 ? date('m/d/Y', strtotime($last_period_list->first()->menstruation_date)) : null) . '"
+                    data-menstruation_period_id="' . (count($last_period_list) != 0 ? $last_period_list->first()->id : null) . '"
                     data-toggle="modal" data-target="#editFeminineModal">
                         <i class="fa-solid fa-user-pen"></i> Edit
                 </button>
 
-                <button type="button" class="btn btn-sm btn-warning text-white delete_record" data-id="'.$feminine['id'].'"><i class="fa-solid fa-user-xmark"></i> Unassigned</button>
+                <button type="button" class="btn btn-sm btn-warning text-white delete_record" data-id="' . $feminine['id'] . '"><i class="fa-solid fa-user-xmark"></i> Unassigned</button>
             ';
 
             $feminine_arr[$feminine_key]['estimated_next_period'] = date('F j, Y', strtotime($estimated_next_period));
             $feminine_arr[$feminine_key]['estimated_menstrual_status'] = $estimated_next_period < date('Y-m-d') ? '<span class="text-danger"><strong>&bull;</strong> Delay</span>' : '<span class="text-success"><strong>&bull;</strong> On Time</span>';
         }
 
-        return response()->json(['data'=>$feminine_arr, "recordsFiltered"=>count($feminine_arr), 'recordsTotal'=>count($feminine_arr)]);
+        return response()->json(['data' => $feminine_arr, "recordsFiltered" => count($feminine_arr), 'recordsTotal' => count($feminine_arr)]);
     }
 
-    public function calendarIndex() {
+    public function calendarIndex()
+    {
         $new_period_notification = $this->newMenstrualPeriodNotificationForHealthWorker();
         return view('health_worker/calendar/index', compact('new_period_notification'));
     }
 
-    public function calendarData() {
+    public function calendarData()
+    {
 
         // only the active accounts and those who are under the care of this bhw will be processed in the calendar
         $user_list = FeminineHealthWorkerGroup::join('users', 'users.id', '=', 'feminine_health_worker_groups.feminine_id')
@@ -142,15 +147,16 @@ class BarangayHealthWorkerController extends Controller
             ->get(['users.id', 'users.first_name', 'users.last_name']);
 
         $last_period_arr = [];
-        foreach($user_list as $user_key => $user) {
-            $last_period_arr[$user_key]['name'] = 'Active: ' . $user->last_name.', '.$user->first_name;
+        foreach ($user_list as $user_key => $user) {
+            $last_period_arr[$user_key]['name'] = 'Active: ' . $user->last_name . ', ' . $user->first_name;
             $last_period_arr[$user_key]['period_date'] = User::findOrfail($user->id)->last_periods()->first();
         }
 
         return response()->json($last_period_arr);
     }
 
-    public function healthWorkerFeminineList() {
+    public function healthWorkerFeminineList()
+    {
 
         $assigned_feminine_list = $this->assignedFeminineList(Auth::user()->id);
 
@@ -167,23 +173,24 @@ class BarangayHealthWorkerController extends Controller
         return response()->json($data);
     }
 
-    public function postAssignFeminine(Request $request) {
-        if($request['feminine_id'] && count($request['feminine_id']) != 0) {
-            foreach($request['feminine_id'] as $user_id) {
+    public function postAssignFeminine(Request $request)
+    {
+        if ($request['feminine_id'] && count($request['feminine_id']) != 0) {
+            foreach ($request['feminine_id'] as $user_id) {
                 $post_assign_health_worker = FeminineHealthWorkerGroup::firstOrCreate([
                     'feminine_id' => $user_id,
                     'health_worker_id' => $request->id
                 ]);
             }
-            return response()->json(['status' => 'success', 'message' => count($request['feminine_id']).' Feminine successfully assigned.']);
-        }
-        else {
+            return response()->json(['status' => 'success', 'message' => count($request['feminine_id']) . ' Feminine successfully assigned.']);
+        } else {
             return response()->json(['status' => 'error', 'message' => 'Please select at least one feminine.']);
         }
     }
 
-    public function accountSettings() {
-        if(!Auth::check()) {
+    public function accountSettings()
+    {
+        if (!Auth::check()) {
             Session::flash('auth-error', 'Please login to continue.');
             return redirect()->route('login.page');
         }
@@ -192,27 +199,30 @@ class BarangayHealthWorkerController extends Controller
             $new_period_notification = $this->newMenstrualPeriodNotificationForHealthWorker();
             $user = User::findOrFail(Auth::user()->id);
             return view('health_worker/profile/index', compact('user', 'new_period_notification'));
-        }
-        catch(ModelNotFoundException $e) {
+        } catch (ModelNotFoundException $e) {
             Session::flash('auth-error', 'Please login to continue.');
             return redirect()->route('login.page');
         }
     }
 
-    public function updateProfile(Request $request) {
+    public function updateProfile(Request $request)
+    {
         try {
-            $check_validation = Validator::make($request->all(), [ 
+            $check_validation = Validator::make($request->all(), [
                 'first_name' => 'required|max:100',
                 'last_name' => 'required|max:100',
                 'email' => 'required|email|max:100',
-                'birthdate' => 'required|date|before:today'
+                'birthdate' => 'required|date|before:today',
+                'contact_no' => ['numeric', 'nullable', 'regex:/^\d{10,11}$/'],
+            ], [
+                'contact_no.regex' => 'The contact number must be 10 or 11 digits.'
             ]);
 
-            if($check_validation->fails()) return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
+            if ($check_validation->fails()) return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
 
-            if(!isset($request->id)) return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
+            if (!isset($request->id)) return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
 
-            if(Auth::user()->id != $request->id) return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
+            if (Auth::user()->id != $request->id) return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
 
             $user_data = User::findOrFail($request->id);
             $user_data->fill([
@@ -220,6 +230,7 @@ class BarangayHealthWorkerController extends Controller
                 'middle_name' => $request->middle_name ?? null,
                 'last_name' => $request->last_name,
                 'email' => $request->email ?? null,
+                'contact_no' => $request->contact_no ?? null,
                 'address' => $request->address ?? null,
                 'birthdate' => date('Y-m-d', strtotime($request->birthdate)),
                 'remarks' => $request->remarks ?? null,
@@ -227,61 +238,59 @@ class BarangayHealthWorkerController extends Controller
             $user_data->save();
 
             return response()->json(['success' => true, 'message' => 'Profile successfully updated'], 200);
-        }
-        catch(\ModelNotFoundException $e) {
-            return response()->json(['status'=>'error', 'message'=>'User not found, please refresh your browser and try again'], 404);
-        }
-        catch(\Exception $e) {
-            return response()->json(['status'=>'error', 'message'=>$e->getMessage()], 500);
+        } catch (\ModelNotFoundException $e) {
+            return response()->json(['status' => 'error', 'message' => 'User not found, please refresh your browser and try again'], 404);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
 
-    public function changePassword(Request $request) {
+    public function changePassword(Request $request)
+    {
         try {
-            $check_validation = Validator::make($request->all(), [ 
+            $check_validation = Validator::make($request->all(), [
                 'old_password' => 'required',
                 'new_password' => 'required|confirmed|min:6',
                 'new_password_confirmation' => 'required|min:6'
             ]);
 
-            if($check_validation->fails()) return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
+            if ($check_validation->fails()) return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
 
-            if(!isset($request->id)) return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
+            if (!isset($request->id)) return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
 
-            if(Auth::user()->id != $request->id) return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
+            if (Auth::user()->id != $request->id) return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
 
             $user_data = User::findOrFail($request->id);
 
-            if(!Hash::check($request->old_password, $user_data->password)) return response()->json(['success' => false, 'message' => 'Old password is incorrect, please try again.'], 500);
+            if (!Hash::check($request->old_password, $user_data->password)) return response()->json(['success' => false, 'message' => 'Old password is incorrect, please try again.'], 500);
 
             $user_data->fill(['password' => Hash::make($request->new_password)]);
             $user_data->save();
 
             return response()->json(['success' => true, 'message' => 'Password successfully changed'], 200);
-        }
-        catch(\ModelNotFoundException $e) {
-            return response()->json(['status'=>'error', 'message'=>'User not found, please refresh your browser and try again'], 404);
+        } catch (\ModelNotFoundException $e) {
+            return response()->json(['status' => 'error', 'message' => 'User not found, please refresh your browser and try again'], 404);
         }
     }
 
-    public function pieChartData() {
+    public function pieChartData()
+    {
 
         $active_feminine_count = User::where('user_role_id', 2)->where('menstruation_status', 1)->count();
         $inactive_feminine_count = User::where('user_role_id', 2)->where('menstruation_status', 0)->count();
 
         $data_response = [];
         $category_arr = ['Active', 'Inactive'];
-        foreach($category_arr as $category) {
-            if($category === 'Active') {
-                if($active_feminine_count != 0) {
+        foreach ($category_arr as $category) {
+            if ($category === 'Active') {
+                if ($active_feminine_count != 0) {
                     $data_response[] = [
                         'value' => $active_feminine_count,
                         'category' => $category,
                     ];
                 }
-            }
-            else if($category === 'Inactive') {
-                if($inactive_feminine_count != 0) {
+            } else if ($category === 'Inactive') {
+                if ($inactive_feminine_count != 0) {
                     $data_response[] = [
                         'value' => $inactive_feminine_count,
                         'category' => $category,
@@ -293,7 +302,8 @@ class BarangayHealthWorkerController extends Controller
         return response()->json($data_response);
     }
 
-    private function assignedFeminineList($health_worker_id) {
+    private function assignedFeminineList($health_worker_id)
+    {
         return $assigned_feminine_list = FeminineHealthWorkerGroup::where('health_worker_id', $health_worker_id)
             ->with('feminine:id,last_name,first_name')
             ->get(['feminine_id', 'feminine_health_worker_groups.id as feminine_health_worker_group_id'])
@@ -306,7 +316,8 @@ class BarangayHealthWorkerController extends Controller
             });
     }
 
-    private function estimatedNextPeriod($last_period_date, $birthdate) {
+    private function estimatedNextPeriod($last_period_date, $birthdate)
+    {
         $last_period = Carbon::parse($last_period_date);
         $birthday = Carbon::parse($birthdate);
 
@@ -321,7 +332,8 @@ class BarangayHealthWorkerController extends Controller
         return $nextPeriod->toDateString();
     }
 
-    private function getAverageCycleLengthByAge($age) {
+    private function getAverageCycleLengthByAge($age)
+    {
 
         // average cycle lengths for different age ranges
         $average_cycle_lengths = [

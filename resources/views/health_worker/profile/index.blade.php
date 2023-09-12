@@ -25,19 +25,19 @@
                                         <div class="col-sm-12 col-lg-4">
                                             <div class="form-group">
                                                 <label for="first_name">First Name</label>
-                                                <input class="form-control" type="text" id="first_name" name="first_name" placeholder="Enter your first name" value="{{ $user->first_name }}">
+                                                <input class="form-control" type="text" id="first_name" name="first_name" placeholder="Enter your first name" value="{{ $user->first_name }}" oninput="handleInputCapitalize(event)">
                                             </div>
                                         </div>
                                         <div class="col-sm-12 col-lg-4">
                                             <div class="form-group">
                                                 <label for="middle_name">Middle Name</label>
-                                                <input class="form-control" type="text" id="middle_name" name="middle_name" placeholder="Enter your middle name" value="{{ $user->middle_name }}">
+                                                <input class="form-control" type="text" id="middle_name" name="middle_name" placeholder="Enter your middle name" value="{{ $user->middle_name }}" oninput="handleInputCapitalize(event)">
                                             </div>
                                         </div>
                                         <div class="col-sm-12 col-lg-4">
                                             <div class="form-group">
                                                 <label for="last_name">Last Name</label>
-                                                <input class="form-control" type="text" id="last_name" name="last_name" placeholder="Enter your last name" value="{{ $user->last_name }}">
+                                                <input class="form-control" type="text" id="last_name" name="last_name" placeholder="Enter your last name" value="{{ $user->last_name }}" oninput="handleInputCapitalize(event)">
                                             </div>
                                         </div>
                                     </div>
@@ -46,7 +46,7 @@
                                         <div class="col-lg-8 col-sm-12">
                                             <div class="form-group">
                                                 <label for="address">Address</label>
-                                                <input class="form-control" type="text" id="address" name="address" placeholder="Enter your current address" value="{{ $user->address }}">
+                                                <input class="form-control" type="text" id="address" name="address" placeholder="Enter your current address" value="{{ $user->address }}" oninput="handleInputCapitalize(event)">
                                             </div>
                                         </div>
 
@@ -69,10 +69,19 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col">
+                                        <div class="col-lg-6 col-ms-12">
                                             <div class="form-group">
                                                 <label for="email">Email</label>
                                                 <input class="form-control" type="email" id="email" name="email" placeholder="Enter your current or active email address" value="{{ $user->email }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-ms-12">
+                                            <div class="form-group">
+                                                <label for="contact_no">Contact No.</label>
+                                                <div class="input-group">
+                                                    <span class="input-addon px-2 rounded-start-1 border border-end-0 d-flex align-items-center justify-content-center" id="basic-addon1">+63</span>
+                                                    <input type="text" id="contact_no" name="contact_no" class="form-control" value="{{ $user->contact_no }}" placeholder="9123456789" oninput="formatPhoneNumber(this)" maxlength="10" pattern="[9]{1}[0-9]{9}">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

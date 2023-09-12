@@ -28,7 +28,7 @@
         <div class="col-lg-8">
             <div class="form-group">
                 <label for="edit_address">Address</label>
-                <input type="text" class="form-control" id="edit_address" name="edit_address" placeholder="Enter address">
+                <input type="text" class="form-control" id="edit_address" name="edit_address" placeholder="Enter address" oninput="handleInputCapitalize(event)">
             </div>
         </div>
 
@@ -52,7 +52,10 @@
         <div class="col-lg-4">
             <div class="form-group">
                 <label for="edit_contact_no">Contact No.</label>
-                <input type="number" class="form-control" id="edit_contact_no" name="edit_contact_no" placeholder="Enter contact no.">
+                <div class="input-group">
+                    <span class="input-addon px-2 rounded-start-1 border border-end-0 d-flex align-items-center justify-content-center" id="basic-addon1">+63</span>
+                    <input type="text" id="edit_contact_no" name="edit_contact_no" class="form-control" placeholder="9123456789" oninput="formatPhoneNumber(this)" maxlength="10" pattern="[9]{1}[0-9]{9}">
+                </div>
             </div>
         </div>
     </div>

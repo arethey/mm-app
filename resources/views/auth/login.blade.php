@@ -35,16 +35,28 @@
                                             <a href="{{ URL::to('user/dashboard') }}" class="btn btn-primary w-100 py-2 fs-4 rounded-1">Return to Dashboard</a>
                                         @endif
                                     @else
-                                        <p class="text-center mb-4">Sign in to your account to proceed</p>
+                                        <p class="text-center mb-4">Sign in using email or mobile # to your account to proceed</p>
                                         <form method="POST" action="{{ route('login') }}" autocomplete="off">
                                             @csrf
-                                            <div class="mb-3">
+                                            <div class="mb-3" id="emailInput">
                                                 <label for="email" class="form-label">Email</label>
-                                                <input type="text" id="email" name="email" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" value="{{ old('email') }}" placeholder="Enter email ex: juany@sample.com" required autofocus>
+                                                <input type="email" id="email" name="email" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" value="{{ old('email') }}" placeholder="Enter email ex: juany@sample.com" required autofocus>
 
                                                 @if ($errors->has('email'))
                                                     <span class="invalid-feedback">
                                                         <strong>{{ $errors->first('email') }}</strong>
+                                                    </span>
+                                                @endif
+                                            </div>
+                                            <div class="mb-3" id="mobileInput">
+                                                <label for="contact_no" class="form-label">Mobile #</label>
+                                                <div class="input-group">
+                                                    <span class="input-addon px-2 rounded-start-1 border border-end-0 d-flex align-items-center justify-content-center" id="basic-addon1">+63</span>
+                                                    <input type="text" id="contact_no" name="contact_no" class="form-control" required autofocus placeholder="9123456789" oninput="formatPhoneNumber(this)" maxlength="10" pattern="[9]{1}[0-9]{9}">
+                                                </div>
+                                                @if ($errors->has('contact_no'))
+                                                    <span class="invalid-feedback">
+                                                        <strong>{{ $errors->first('contact_no') }}</strong>
                                                     </span>
                                                 @endif
                                             </div>
@@ -86,6 +98,39 @@
     <script src="{{ asset('assets/auth/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
 
     <script src="{{ asset('assets/izitoast/iziToast.min.js') }}"></script>
+    <script>
+        const email = document.getElementById("email");
+        const contact_no = document.getElementById("contact_no");
+
+        email.addEventListener("input", function () {
+            if(email.value){
+                contact_no.disabled = true;
+                contact_no.value = "";
+            }else{
+                contact_no.disabled = false;
+            }
+        });
+
+        contact_no.addEventListener("input", function () {
+            if(contact_no.value){
+                email.disabled = true;
+                email.value = "";
+            }else{
+                email.disabled = false;
+            }
+        });
+
+        function formatPhoneNumber(input) {
+            let phoneNumber = input.value.replace(/\D/g, '');
+            if (phoneNumber.charAt(0) && phoneNumber.charAt(0) !== '9') {
+                phoneNumber = '9' + phoneNumber.substring(0, 9);
+            }
+            if (phoneNumber.length > 10) {
+                phoneNumber = phoneNumber.substring(0, 10);
+            }
+            input.value = phoneNumber;
+        }
+    </script>
 
     @include('auth.response')
 </body>
