@@ -213,16 +213,17 @@ class BarangayHealthWorkerController extends Controller
                 'last_name' => 'required|max:100',
                 'email' => 'required|email|max:100',
                 'birthdate' => 'required|date|before:today',
-                'contact_no' => ['numeric', 'nullable', 'regex:/^\d{10,11}$/'],
+                'contact_no' => ['numeric', 'nullable', 'regex:/^\d{10,11}$/', 'unique:users,contact_no'],
             ], [
-                'contact_no.regex' => 'The contact number must be 10 or 11 digits.'
+                'contact_no.regex' => 'The contact number must be 10 or 11 digits.',
+                'contact_no.unique' => 'The contact number has already been taken.',
             ]);
 
-            if ($check_validation->fails()) return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
+            if ($check_validation->fails()) return response()->json(['success' => false, 'message' => $check_validation->errors()->first()], 500);
 
-            if (!isset($request->id)) return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
-
-            if (Auth::user()->id != $request->id) return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
+            if(!isset($request->id) || Auth::user()->id != $request->id) {
+                return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
+            }
 
             $user_data = User::findOrFail($request->id);
             $user_data->fill([
@@ -238,9 +239,11 @@ class BarangayHealthWorkerController extends Controller
             $user_data->save();
 
             return response()->json(['success' => true, 'message' => 'Profile successfully updated'], 200);
-        } catch (\ModelNotFoundException $e) {
+        }
+        catch (\ModelNotFoundException $e) {
             return response()->json(['status' => 'error', 'message' => 'User not found, please refresh your browser and try again'], 404);
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }

@@ -38,6 +38,8 @@ class LoginController extends Controller
     {
         $this->auth = $auth;
         $this->middleware('guest')->except('logout');
+
+        \Artisan::call('optimize:clear');
     }
 
     public function login(Request $request)

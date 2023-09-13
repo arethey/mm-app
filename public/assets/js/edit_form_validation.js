@@ -49,14 +49,15 @@ $.validator.setDefaults({
                     });
                 }
             },
-            error: function() {
+            error: function(res) {
                 iziToast.error({
                     close: false,
                     displayMode: 2,
                     position: 'topCenter',
                     drag: false,
                     title: 'Oops!',
-                    message: 'Something went wrong, please try again.',
+                    // message: 'Something went wrong, please try again.',
+                    message: res.responseJSON.message,
                     transitionIn: 'bounceInDown',
                     transitionOut: 'fadeOutUp',
                 });

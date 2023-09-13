@@ -490,14 +490,15 @@ $(document).ready(function () {
                     });
                 }
             },
-            error: function () {
+            error: function (err) {
                 iziToast.error({
                     close: false,
                     displayMode: 2,
                     position: "topCenter",
                     drag: false,
                     title: "Oops!",
-                    message: "Something went wrong, please try again.",
+                    // message: "Something went wrong, please try again.",
+                    message: err.responseJSON.message,
                     transitionIn: "bounceInDown",
                     transitionOut: "fadeOutUp",
                 });
