@@ -211,13 +211,13 @@ class BarangayHealthWorkerController extends Controller
             $check_validation = Validator::make($request->all(), [
                 'first_name' => 'required|max:100',
                 'last_name' => 'required|max:100',
-                'email' => 'required|email|max:100',
+                'email' => 'required|email|max:100|unique:users,email',
                 'birthdate' => 'required|date|before:today',
                 'contact_no' => ['numeric', 'nullable', 'regex:/^\d{10,11}$/', 'unique:users,contact_no'],
             ], [
                 'contact_no.regex' => 'The contact number must be 10 or 11 digits.',
                 'contact_no.unique' => 'The contact number has already been taken.',
-                'email.unique' => 'The email has already been taken.',
+                'unique' => 'The :attribute field has already been taken.'
             ]);
 
             if ($check_validation->fails()) return response()->json(['success' => false, 'message' => $check_validation->errors()->first()], 500);
