@@ -27,41 +27,42 @@ class LoginController extends Controller
 
     use AuthenticatesUsers;
 
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    // protected $redirectTo = RouteServiceProvider::HOME;
-
-    public function __construct(Guard $auth)
-    {
+    public function __construct(Guard $auth) {
         $this->auth = $auth;
         $this->middleware('guest')->except('logout');
 
         \Artisan::call('optimize:clear');
     }
 
-    public function login(Request $request)
-    {
-        $credentials = $request->only('email', 'contact_no', 'password');
+    public function login(Request $request) {
+        $credentials = $request->only('password');
+        $multi_user_field = filter_var($request->input('email'), FILTER_VALIDATE_EMAIL) ? 'email' : 'contact_no';
 
-        if ($this->auth->attempt($credentials) || $this->auth->attempt(['contact_no' => $credentials['contact_no'], 'password' => $credentials['password']])) {
-            if ($this->auth->user()->user_role_id == 1) {
+        $credentials[$multi_user_field] = $request->input($multi_user_field);
+
+        if ($this->auth->attempt($credentials)) {
+
+            $user = $this->auth->user();
+
+            if($user->user_role_id == 1) {
                 return redirect()->route('admin.dashboard');
-            } else if ($this->auth->user()->user_role_id == 3) {
+            }
+            elseif($user->user_role_id == 3) {
                 return redirect()->route('health-worker.dashboard');
-            } else {
-                if ($this->auth->user()->is_active == 1) {
+            }
+            else {
+                if($user->is_active == 1) {
                     return redirect()->route('user.dashboard');
-                } else {
+                }
+                else {
                     $this->logout($request);
 
                     Session::flash('account-verification-error', 'Your account is not verified by the admin yet. Please come back later.');
                     return redirect()->route('login.page');
                 }
             }
-        } else {
+        }
+        else {
             $this->logout($request);
 
             Session::flash('login-error', 'Invalid user credential, please try again.');
