@@ -217,7 +217,7 @@ class BarangayHealthWorkerController extends Controller
             ], [
                 'contact_no.regex' => 'The contact number must be 10 or 11 digits.',
                 'contact_no.unique' => 'The contact number has already been taken.',
-                'email.required' => 'The email has already been taken.',
+                'email.unique' => 'The email has already been taken.',
             ]);
 
             if ($check_validation->fails()) return response()->json(['success' => false, 'message' => $check_validation->errors()->first()], 500);
