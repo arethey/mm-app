@@ -111,7 +111,7 @@
         }
         function formatPhoneNumber(input) {
             let phoneNumber = input.value.replace(/\D/g, '');
-            if (phoneNumber.charAt(0) !== '9') {
+            if (phoneNumber.charAt(0) && phoneNumber.charAt(0) !== '9') {
                 phoneNumber = '9' + phoneNumber.substring(0, 9);
             }
             if (phoneNumber.length > 10) {
