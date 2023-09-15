@@ -14,23 +14,26 @@ use App\Models\MenstruationPeriod;
 
 use Carbon\Carbon;
 
-class UserController extends Controller {
-    
-    public function index() {
+class UserController extends Controller
+{
+
+    public function index()
+    {
 
         $menstruation_period_list = $this->getMenstruationPeriods();
         $estimated_next_period = null;
-        if(count($menstruation_period_list) !== 0) {
+        if (count($menstruation_period_list) !== 0) {
             $estimated_next_period = $this->estimatedNextPeriod($menstruation_period_list->first()->menstruation_date, Auth::user()->birthdate);
         }
 
         return view('user.dashboard', compact('menstruation_period_list', 'estimated_next_period'));
     }
 
-    public function menstruationCalendarPeriod() {
+    public function menstruationCalendarPeriod()
+    {
 
         $menstruation_period_list = $this->getMenstruationPeriods();
-        if(count($menstruation_period_list) !== 0) {
+        if (count($menstruation_period_list) !== 0) {
             $estimated_next_period = $this->estimatedNextPeriod($menstruation_period_list->first()->menstruation_date, Auth::user()->birthdate);
         }
 
@@ -40,11 +43,12 @@ class UserController extends Controller {
         ]);
     }
 
-    public function postMenstruationPeriod(Request $request) {
+    public function postMenstruationPeriod(Request $request)
+    {
         try {
-            if(Auth::check() && Auth::user()->id == $request->id) {
+            if (Auth::check() && Auth::user()->id == $request->id) {
 
-                if(Auth::user()->menstruation_status == 0) return response()->json(['status' => 'error', 'message' => 'Your menstruation status is inactive, you\'re not allowed to save new record at the moment.'], 500);
+                if (Auth::user()->menstruation_status == 0) return response()->json(['status' => 'error', 'message' => 'Your menstruation status is inactive, you\'re not allowed to save new record at the moment.'], 500);
 
                 $menstruation_period = MenstruationPeriod::firstOrCreate([
                     'user_id' => $request->id,
@@ -52,7 +56,7 @@ class UserController extends Controller {
                 ], [
                     'remarks' => $request->remarks
                 ]);
-                
+
                 $menstruation_period_list = $this->getMenstruationPeriods();
                 $estimated_next_period = $this->estimatedNextPeriod($menstruation_period_list->first()->menstruation_date, Auth::user()->birthdate);
 
@@ -65,24 +69,22 @@ class UserController extends Controller {
                     'latest_period_date' => date('F j, Y', strtotime($this->getMenstruationPeriods()->first()->menstruation_date)),
                     'estimated_next_period' => $estimated_next_period ? date('F j, Y', strtotime($estimated_next_period)) : null
                 ]);
-            }
-            else {
+            } else {
                 return response()->json(['status' => 'error', 'message' => 'Something went wrong'], 500);
             }
-        }
-        catch(ModelNotFoundException $e) {
+        } catch (ModelNotFoundException $e) {
             return response()->json(['status' => 'error', 'message' => 'User not found'], 404);
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => 'Something went wrong'], 500);
         }
     }
 
-    public function updateMenstruationPeriod(Request $request) {
+    public function updateMenstruationPeriod(Request $request)
+    {
         try {
-            if(Auth::check() && Auth::user()->id == $request->id) {
+            if (Auth::check() && Auth::user()->id == $request->id) {
 
-                if(Auth::user()->menstruation_status == 0) return response()->json(['status' => 'error', 'message' => 'Your menstruation status is inactive, you\'re not allowed to save new record at the moment.'], 500);
+                if (Auth::user()->menstruation_status == 0) return response()->json(['status' => 'error', 'message' => 'Your menstruation status is inactive, you\'re not allowed to save new record at the moment.'], 500);
 
                 $post_update_period = MenstruationPeriod::findOrfail($request->menstruation_period_id);
                 $post_update_period->menstruation_date = date('Y-m-d', strtotime($request->menstruation_period));
@@ -91,40 +93,39 @@ class UserController extends Controller {
 
                 return response()->json(['status' => 'success', 'message' => 'Menstruation Period successfully updated']);
             }
-        }
-        catch(ModelNotFoundException $e) {
+        } catch (ModelNotFoundException $e) {
             return response()->json(['status' => 'error', 'message' => 'User not found'], 404);
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => 'Something went wrong'], 500);
         }
     }
 
-    public function deleteMenstruationPeriod(Request $request) {
+    public function deleteMenstruationPeriod(Request $request)
+    {
         try {
             $post_delete_period = MenstruationPeriod::findOrfail($request->id);
             $post_delete_period->delete();
 
             return response()->json(['status' => 'success', 'message' => 'Menstruation Period successfully deleted']);
-        }
-        catch(ModelNotFoundException $e) {
+        } catch (ModelNotFoundException $e) {
             return response()->json(['status' => 'error', 'message' => 'User not found'], 404);
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => 'Something went wrong'], 500);
         }
     }
 
-    public function menstrualIndex() {
+    public function menstrualIndex()
+    {
         return view('user/menstrual/index');
     }
 
-    public function menstrualData() {
+    public function menstrualData()
+    {
 
         $menstruation_period_arr = $this->getMenstruationPeriods()->toArray();
 
         $row_count = 0;
-        foreach($menstruation_period_arr as $menstruation_period_key => $menstruation_period) {
+        foreach ($menstruation_period_arr as $menstruation_period_key => $menstruation_period) {
 
             $menstruation_period_arr[$menstruation_period_key]['row_count'] = ++$row_count;
             $menstruation_period_arr[$menstruation_period_key]['menstruation_date'] = date('F j, Y', strtotime($menstruation_period['menstruation_date']));
@@ -141,12 +142,13 @@ class UserController extends Controller {
             ';
         }
 
-        return response()->json(['data'=>$menstruation_period_arr, "recordsFiltered"=>count($menstruation_period_arr), 'recordsTotal'=>count($menstruation_period_arr)]);
+        return response()->json(['data' => $menstruation_period_arr, "recordsFiltered" => count($menstruation_period_arr), 'recordsTotal' => count($menstruation_period_arr)]);
     }
 
-    public function profileIndex() {
+    public function profileIndex()
+    {
 
-        if(!Auth::check()) {
+        if (!Auth::check()) {
             Session::flash('auth-error', 'Please login to continue.');
             return redirect()->route('login.page');
         }
@@ -154,30 +156,31 @@ class UserController extends Controller {
         try {
             $user = User::findOrFail(Auth::user()->id);
             return view('user/profile/index', compact('user'));
-        }
-        catch(ModelNotFoundException $e) {
+        } catch (ModelNotFoundException $e) {
             Session::flash('auth-error', 'Please login to continue.');
             return redirect()->route('login.page');
         }
     }
 
-    public function updateProfile(Request $request) {
+    public function updateProfile(Request $request)
+    {
         try {
-            $check_validation = Validator::make($request->all(), [ 
+            $check_validation = Validator::make($request->all(), [
                 'first_name' => 'required|max:100',
                 'last_name' => 'required|max:100',
                 'email' => 'required|email|max:100',
                 'menstruation_status' => 'required|boolean',
                 'birthdate' => 'required|date|before:today',
                 'contact_no' => ['numeric', 'nullable', 'regex:/^\d{10,11}$/', 'unique:users,contact_no'],
-            ],[
+            ], [
                 'contact_no.regex' => 'The contact number must be 10 or 11 digits.',
                 'contact_no.unique' => 'The contact number has already been taken.',
+                'email.required' => 'The email has already been taken.',
             ]);
 
-            if($check_validation->fails()) return response()->json(['success' => false, 'message' => $check_validation->errors()->first()], 500);
+            if ($check_validation->fails()) return response()->json(['success' => false, 'message' => $check_validation->errors()->first()], 500);
 
-            if(!isset($request->id) || Auth::user()->id != $request->id) {
+            if (!isset($request->id) || Auth::user()->id != $request->id) {
                 return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
             }
 
@@ -196,51 +199,51 @@ class UserController extends Controller {
             $user_data->save();
 
             return response()->json(['success' => true, 'message' => 'Profile successfully updated'], 200);
-        }
-        catch(\ModelNotFoundException $e) {
-            return response()->json(['status'=>'error', 'message'=>'User not found, please refresh your browser and try again'], 404);
-        }
-        catch(\Exception $e) {
-            return response()->json(['status'=>'error', 'message'=>$e->getMessage()], 500);
+        } catch (\ModelNotFoundException $e) {
+            return response()->json(['status' => 'error', 'message' => 'User not found, please refresh your browser and try again'], 404);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
 
-    public function changePassword(Request $request) {
+    public function changePassword(Request $request)
+    {
         try {
-            $check_validation = Validator::make($request->all(), [ 
+            $check_validation = Validator::make($request->all(), [
                 'old_password' => 'required',
                 'new_password' => 'required|confirmed|min:6',
                 'new_password_confirmation' => 'required|min:6'
             ]);
 
-            if($check_validation->fails()) return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
+            if ($check_validation->fails()) return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
 
-            if(!isset($request->id)) return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
+            if (!isset($request->id)) return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
 
-            if(Auth::user()->id != $request->id) return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
+            if (Auth::user()->id != $request->id) return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
 
             $user_data = User::findOrFail($request->id);
 
-            if(!Hash::check($request->old_password, $user_data->password)) return response()->json(['success' => false, 'message' => 'Old password is incorrect, please try again.'], 500);
+            if (!Hash::check($request->old_password, $user_data->password)) return response()->json(['success' => false, 'message' => 'Old password is incorrect, please try again.'], 500);
 
             $user_data->fill(['password' => Hash::make($request->new_password)]);
             $user_data->save();
 
             return response()->json(['success' => true, 'message' => 'Password successfully updated'], 200);
-        }
-        catch(\ModelNotFoundException $e) {
-            return response()->json(['status'=>'error', 'message'=>'User not found, please refresh your browser and try again'], 404);
+        } catch (\ModelNotFoundException $e) {
+            return response()->json(['status' => 'error', 'message' => 'User not found, please refresh your browser and try again'], 404);
         }
     }
 
-    private function getMenstruationPeriods() {
+    private function getMenstruationPeriods()
+    {
         $user = User::findOrFail(Auth::user()->id);
         $menstruation_period_list = $user->last_periods()->get();
 
         return $menstruation_period_list;
     }
 
-    private function estimatedNextPeriod($last_period_date, $birthdate) {
+    private function estimatedNextPeriod($last_period_date, $birthdate)
+    {
         $last_period = Carbon::parse($last_period_date);
         $birthday = Carbon::parse($birthdate);
 
@@ -255,7 +258,8 @@ class UserController extends Controller {
         return $nextPeriod->toDateString();
     }
 
-    private function getAverageCycleLengthByAge($age) {
+    private function getAverageCycleLengthByAge($age)
+    {
 
         // average cycle lengths for different age ranges
         $average_cycle_lengths = [

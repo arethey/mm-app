@@ -217,11 +217,12 @@ class BarangayHealthWorkerController extends Controller
             ], [
                 'contact_no.regex' => 'The contact number must be 10 or 11 digits.',
                 'contact_no.unique' => 'The contact number has already been taken.',
+                'email.required' => 'The email has already been taken.',
             ]);
 
             if ($check_validation->fails()) return response()->json(['success' => false, 'message' => $check_validation->errors()->first()], 500);
 
-            if(!isset($request->id) || Auth::user()->id != $request->id) {
+            if (!isset($request->id) || Auth::user()->id != $request->id) {
                 return response()->json(['success' => false, 'message' => 'Something went wrong, failed to save data. Please try again.'], 500);
             }
 
@@ -239,11 +240,9 @@ class BarangayHealthWorkerController extends Controller
             $user_data->save();
 
             return response()->json(['success' => true, 'message' => 'Profile successfully updated'], 200);
-        }
-        catch (\ModelNotFoundException $e) {
+        } catch (\ModelNotFoundException $e) {
             return response()->json(['status' => 'error', 'message' => 'User not found, please refresh your browser and try again'], 404);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
