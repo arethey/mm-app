@@ -65,6 +65,31 @@ $(document).ready(function () {
     });
 
     var validation_options = {
+        onkeyup: function (element) {
+            if ($(element).attr('id') === 'email_address') {
+                $(element).val() !== ''
+                    ? $('#contact_no-error').css('display', 'none').closest('.form-group').removeClass('has-danger')
+                    : $('#contact_no-error').css('display', 'block').closest('.form-group').addClass('has-danger');
+            }
+            else if($(element).attr('id') === 'edit_email_address') {
+                $(element).val() !== ''
+                    ? $('#edit_contact_no-error').css('display', 'none').closest('.form-group').removeClass('has-danger')
+                    : $('#edit_contact_no-error').css('display', 'block').closest('.form-group').addClass('has-danger');
+            }
+
+            if ($(element).attr('id') === 'contact_no') {
+                $(element).val() !== ''
+                    ? $('#email_address-error').css('display', 'none').closest('.form-group').removeClass('has-danger')
+                    : $('#email_address-error').css('display', 'block').closest('.form-group').addClass('has-danger');
+            }
+            else if($(element).attr('id') === 'edit_contact_no') {
+                $(element).val() !== ''
+                    ? $('#edit_email_address-error').css('display', 'none').closest('.form-group').removeClass('has-danger')
+                    : $('#edit_email_address-error').css('display', 'block').closest('.form-group').addClass('has-danger');
+            }
+
+            $(element).valid();
+        },
         rules: {
             first_name: {
                 required: true,
@@ -73,18 +98,22 @@ $(document).ready(function () {
                 required: true,
             },
             email_address: {
-                required: true,
                 email: true,
+                required: function (element) {
+                    return $("#contact_no").val() === "";
+                }
             },
             birthdate: {
                 required: true,
                 date: true,
             },
             contact_no: {
-                required: false,
+                required: function (element) {
+                    return $("#email_address").val() === "";
+                },
                 digits: true,
                 minlength: 10,
-                maxlength: 11,
+                maxlength: 11
             },
             edit_first_name: {
                 required: true,
@@ -93,11 +122,15 @@ $(document).ready(function () {
                 required: true,
             },
             edit_email_address: {
-                required: true,
                 email: true,
+                required: function (element) {
+                    return $("#edit_contact_no").val() === "";
+                }
             },
             edit_contact_no: {
-                required: false,
+                required: function (element) {
+                    return $("#edit_email_address").val() === "";
+                },
                 digits: true,
                 minlength: 10,
                 maxlength: 11,
@@ -125,11 +158,13 @@ $(document).ready(function () {
                 digits: "Please enter a valid contact number",
                 minlength: "Must be at least 10 digits",
                 maxlength: "Must not exceed 11 digits",
+                required: "Please enter your contact number",
             },
             edit_contact_no: {
                 digits: "Please enter a valid contact number",
                 minlength: "Must be at least 10 digits",
                 maxlength: "Must not exceed 11 digits",
+                required: "Please enter your contact number",
             },
             edit_email_address: {
                 required: "Please enter the active email of the user",
@@ -146,10 +181,18 @@ $(document).ready(function () {
         highlight: function (element, errorClass) {
             $(element).parent().addClass("has-danger");
             $(element).addClass("form-control-danger");
+
+            if ($(element).attr('id') === 'contact_no' || $(element).attr('id') === 'email_address' || $(element).attr('id') === 'edit_contact_no' || $(element).attr('id') === 'edit_email_address') {
+                $(element).closest('.form-group').addClass('has-danger')
+            }
         },
         unhighlight: function (element, errorClass) {
             $(element).parent().removeClass("has-danger");
             $(element).removeClass("form-control-danger");
+
+            if ($(element).attr('id') === 'contact_no' || $(element).attr('id') === 'email_address' || $(element).attr('id') === 'edit_contact_no' || $(element).attr('id') === 'edit_email_address') {
+                $(element).closest('.form-group').removeClass('has-danger')
+            }
         },
     };
 

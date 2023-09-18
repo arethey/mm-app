@@ -111,8 +111,8 @@
                             <img src="{{ asset('assets/images/user-avatar.png') }}" alt="">
                         </div>
                         <div class="info text-center">
-                            <p class="name font-weight-bold mb-0">{{ Auth::user()->username }}</p>
-                            <p class="email text-muted mb-3">{{ Auth::user()->email }}</p>
+                            <p class="name font-weight-bold mb-0">{{ Auth::user()->username ?? (Auth::user()->first_name) }}</p>
+                            <p class="email text-muted mb-3">{{ Auth::user()->email ?? '+63'.(Auth::user()->contact_no) }}</p>
                         </div>
                     </div>
                     <div class="dropdown-body">

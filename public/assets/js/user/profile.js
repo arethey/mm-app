@@ -64,6 +64,21 @@ $.validator.setDefaults({
 });
 
 $("#profile_form").validate({
+    onkeyup: function (element) {
+        if ($(element).attr('id') === 'email') {
+            $(element).val() !== ''
+                ? $('#contact_no-error').css('display', 'none').closest('.form-group').removeClass('has-danger')
+                : $('#contact_no-error').css('display', 'block').closest('.form-group').addClass('has-danger');
+        }
+
+        if ($(element).attr('id') === 'contact_no') {
+            $(element).val() !== ''
+                ? $('#email-error').css('display', 'none').closest('.form-group').removeClass('has-danger')
+                : $('#email-error').css('display', 'block').closest('.form-group').addClass('has-danger');
+        }
+
+        $(element).valid();
+    },
     rules: {
         first_name: {
             required: true,
@@ -71,8 +86,10 @@ $("#profile_form").validate({
         last_name: {
             required: true,
         },
-        email_address: {
-            required: true,
+        email: {
+            required: function (element) {
+                return $("#contact_no").val() === "";
+            },
             email: true
         },
         menstruation_status: {
@@ -83,7 +100,9 @@ $("#profile_form").validate({
             date: true
         },
         contact_no: {
-            required: false,
+            required: function (element) {
+                return $("#email").val() === "";
+            },
             digits: true,
             minlength: 10,
             maxlength: 11
@@ -96,7 +115,7 @@ $("#profile_form").validate({
         last_name: {
             required: "Please enter a last name",
         },
-        email_address: {
+        email: {
             required: "Please enter the active email of the user",
         },
         menstruation_status: {
@@ -109,7 +128,8 @@ $("#profile_form").validate({
         contact_no: {
             digits: "Please enter a valid contact number",
             minlength: "Must be at least 10 digits",
-            maxlength: "Must not exceed 11 digits"
+            maxlength: "Must not exceed 11 digits",
+            required: "Please enter your contact number"
         }
     },
     errorPlacement: function (label, element) {
@@ -119,9 +139,17 @@ $("#profile_form").validate({
     highlight: function (element, errorClass) {
         $(element).parent().addClass('has-danger')
         $(element).addClass('form-control-danger')
+
+        if ($(element).attr('id') === 'contact_no' || $(element).attr('id') === 'email') {
+            $(element).closest('.form-group').addClass('has-danger')
+        }
     },
     unhighlight: function (element, errorClass) {
         $(element).parent().removeClass('has-danger');
         $(element).removeClass('form-control-danger');
+
+        if ($(element).attr('id') === 'contact_no' || $(element).attr('id') === 'email') {
+            $(element).closest('.form-group').removeClass('has-danger')
+        }
     }
 });

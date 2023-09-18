@@ -18,6 +18,21 @@ $(document).on('change', '#birthdate', function(e) {
 });
 
 $("#sign_up_form").validate({
+    onkeyup: function (element) {
+        if($(element).attr('name') === 'email') {
+            $(element).val() !== ''
+                ? $('#contact_no-error').css('display', 'none')
+                : $('#contact_no-error').css('display', 'block');
+        }
+
+        if($(element).attr('name') === 'contact_no') {
+            $(element).val() !== ''
+                ? $('#email-error').css('display', 'none')
+                : $('#email-error').css('display', 'block');
+        }
+
+        $(element).valid();
+    },
     rules: {
         first_name: {
             required: true,
@@ -26,8 +41,19 @@ $("#sign_up_form").validate({
             required: true,
         },
         email: {
-            required: true,
-            email: true
+            // required: true,
+            email: true,
+            required: function (element) {
+                return $("#contact_no").val() === "";
+            }
+        },
+        contact_no: {
+            digits: true,
+            minlength: 10,
+            maxlength: 11,
+            required: function (element) {
+                return $("#email").val() === "";
+            }
         },
         menstruation_status: {
             required: true,
@@ -58,6 +84,12 @@ $("#sign_up_form").validate({
         },
         email: {
             required: "Please enter your active email address",
+        },
+        contact_no: {
+            digits: "Please enter a valid contact number",
+            minlength: "Must be at least 10 digits",
+            maxlength: "Must not exceed 11 digits",
+            required: "Please enter your contact number",
         },
         menstruation_status: {
             required: "Please select your current menstruation status",

@@ -3,9 +3,9 @@
 
 @section('styles')
     <style>
-        .card-title {
-            font-size: 1.2rem !important;
-        }
+        .card-title { font-size: 1.2rem !important; }
+
+        #contact_no-error { width: 100%!important }
     </style>
 @endsection
 

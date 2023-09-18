@@ -16,6 +16,10 @@
             width: 100%;
             height: 430px;
         }
+
+        #contact_no-error {
+            width: 100%!important
+        }
     </style>
 @endsection
 

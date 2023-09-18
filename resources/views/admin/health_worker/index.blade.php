@@ -33,6 +33,8 @@
             background: #f6f8fb; 
             border-radius: 2px;
         }
+
+        #contact_no-error { width: 100% !important }
     </style>
 @endsection
 

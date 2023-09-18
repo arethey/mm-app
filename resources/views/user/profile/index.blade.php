@@ -6,6 +6,8 @@
         .card-title {
             font-size: 1.2rem !important;
         }
+
+        #contact_no-error { width: 100%!important }
     </style>
 @endsection
 
@@ -18,7 +20,7 @@
                         <h3 class="card-title font-weight-bold mb-0 mt-1">Personal Details</h3>
                     </div>
                     <div class="card-body">
-                        <form class="form" id="profile_form">
+                        <form class="form" id="profile_form" autocomplete="off">
                             <div class="row">
                                 <div class="col">
                                     <div class="row">

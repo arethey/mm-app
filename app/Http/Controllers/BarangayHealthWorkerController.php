@@ -90,7 +90,7 @@ class BarangayHealthWorkerController extends Controller
             $feminine_arr[$feminine_key]['action'] = '
                 <button type="button" class="btn btn-sm btn-secondary" id="period_notif_' . $feminine['id'] . '"
                     data-full_name="' . $full_name . '"
-                    data-email="' . $feminine['email'] . '"
+                    data-email="' . ($feminine['email'] ?? 'N/A' ) . '"
                     data-contact_no="' . $feminine['contact_no'] . '"
                     data-address="' . $feminine['address'] . '"
                     data-birthdate="' . ($feminine['birthdate'] ? date('F j, Y', strtotime($feminine['birthdate'])) : 'N/A') . '"
@@ -211,9 +211,9 @@ class BarangayHealthWorkerController extends Controller
             $check_validation = Validator::make($request->all(), [
                 'first_name' => 'required|max:100',
                 'last_name' => 'required|max:100',
-                'email' => 'required|email|max:100|unique:users,email',
+                'email' => 'nullable|email|max:100|unique:users,email',
                 'birthdate' => 'required|date|before:today',
-                'contact_no' => ['numeric', 'nullable', 'regex:/^\d{10,11}$/', 'unique:users,contact_no'],
+                'contact_no' => ['numeric', 'nullable', 'regex:/^\d{10,11}$/', 'unique:users,contact_no', 'required_if:email,null'],
             ], [
                 'contact_no.regex' => 'The contact number must be 10 or 11 digits.',
                 'contact_no.unique' => 'The contact number has already been taken.',

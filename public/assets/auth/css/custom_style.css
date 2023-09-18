@@ -22,3 +22,6 @@ input::-webkit-outer-spin-button {
 input[type=number] {
   -moz-appearance: textfield
 }
+#contact_no-error {
+  width: 100%!important
+}

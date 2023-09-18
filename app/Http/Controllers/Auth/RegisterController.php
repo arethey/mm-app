@@ -4,11 +4,15 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
+use Illuminate\Validation\Rule;
+
 use App\Models\User;
+
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+
 use Session;
 
 class RegisterController extends Controller
@@ -54,13 +58,15 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['nullable', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
             'menstruation_status' => ['required', 'boolean'],
             'birthdate' => ['required', 'date', 'before:today'],
-            'contact_no' => ['numeric', 'nullable', 'regex:/^\d{10,11}$/'],
+            'contact_no' => ['numeric', 'nullable', 'regex:/^\d{10,11}$/', 'unique:users,contact_no', 'required_if:email,null'],
         ], [
-            'contact_no.regex' => 'The contact number must be 10 or 11 digits.'
+            'contact_no.regex' => 'The contact number must be 10 or 11 digits.',
+            'contact_no.unique' => 'The contact number has already been taken.',
+            'unique' => 'The :attribute field has already been taken.'
         ]);
     }
 

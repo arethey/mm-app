@@ -120,10 +120,10 @@
                                                     </div>
 
                                                     @if ($errors->has('contact_no'))
-                                                    <span class="invalid-feedback">
-                                                        <strong>{{ $errors->first('contact_no') }}</strong>
-                                                    </span>
-                                                @endif
+                                                        <span class="invalid-feedback">
+                                                            <strong>{{ $errors->first('contact_no') }}</strong>
+                                                        </span>
+                                                    @endif
                                                 </div>
                                             </div>
 

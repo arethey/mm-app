@@ -193,7 +193,7 @@ class AdminController extends Controller {
             $feminine_arr[$feminine_key]['action'] = '
                 <button type="button" class="btn btn-sm btn-secondary" id="period_notif_'. $feminine['id'] .'"
                     data-full_name="'.$full_name.'"
-                    data-email="'.$feminine['email'].'"
+                    data-email="'.($feminine['email'] ?? 'N/A').'"
                     data-address="'.$feminine['address'].'"
                     data-birthdate="'. ($feminine['birthdate'] ? date('F j, Y', strtotime($feminine['birthdate'])) : 'N/A') .'"
                     data-menstruation_status="'.$feminine['menstruation_status'].'"
@@ -391,7 +391,7 @@ class AdminController extends Controller {
             $health_worker_arr[$health_worker_key]['action'] = '
                 <button type="button" class="btn btn-sm btn-secondary"
                     data-full_name="'.$full_name.'"
-                    data-email="'.$health_worker['email'].'"
+                    data-email="'.($health_worker['email'] ?? 'N/A').'"
                     data-contact_no="'.($health_worker['contact_no'] ?? '').'"
                     data-address="'.$health_worker['address'].'"
                     data-birthdate="'. ($health_worker['birthdate'] ? date('F j, Y', strtotime($health_worker['birthdate'])) : 'N/A') .'"
