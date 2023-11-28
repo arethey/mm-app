@@ -3,6 +3,7 @@
         <i data-feather="menu"></i>
     </a>
     <div class="navbar-content">
+        <img class="img-fluid" alt="logo" src="{{ asset('assets/images/blood.jpg') }}" />
         <ul class="navbar-nav">
             @if(Auth::user()->user_role_id == 1 || Auth::user()->user_role_id == 3)
                 <li class="nav-item dropdown nav-notifications">

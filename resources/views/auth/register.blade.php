@@ -25,6 +25,9 @@
                         @endauth
                         <div class="card mb-0">
                             <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <img style="width: 200px" class="img-fluid" alt="logo" src="{{ asset('assets/images/blood.jpg') }}" />
+                                </div>
                                 <p class="text-center fw-bolder mb-1 h4">Menstrual Monitoring App!</p>
                                 @if(Route::has('register'))
                                     @auth
